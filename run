@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Copyright 2023 GlitchyByte
+# SPDX-License-Identifier: MIT-0
+
+# Runs project.
+
+set -u
+. ./_gscript
+
+if [ $# -lt 1 ]; then
+    echoerr "Need the name of the project."
+fi
+name=$1
+
+./build Release
+
+echo "${c_bold}${cf_black}Running: ${cf_white}${name}${c_reset}"
+"./bin/${name}"
