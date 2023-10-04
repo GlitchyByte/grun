@@ -1,5 +1,5 @@
 // Copyright 2023 GlitchyByte
-// SPDX-License-Identifier: MIT-0
+// SPDX-License-Identifier: Apache-2.0
 
 #include <iostream>
 #include <thread>
