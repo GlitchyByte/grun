@@ -12,7 +12,10 @@ if [ $# -lt 1 ]; then
 fi
 name=$1
 
+shift
+readonly args=$*
+
 ./build Release
 
 echo "${c_bold}${cf_black}Running: ${cf_white}${name}${c_reset}"
-"./bin/${name}"
+"./bin/${name}" $args
