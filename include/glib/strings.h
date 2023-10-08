@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "gtypes.h"
+#include "glib/types.h"
 
 namespace glib::strings {
 
@@ -44,4 +44,4 @@ namespace glib::strings {
     std::string fromVector(const std::vector<T>& vector);
 }
 
-#include "gstrings.inl"
+#include "strings.inl"

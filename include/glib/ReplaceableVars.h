@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "glib/gtypes.h"
+#include "glib/types.h"
 
 namespace glib {
 
@@ -36,7 +36,7 @@ namespace glib {
          * @return This object.
          */
         template <std::integral T>
-        ReplaceableVars& addIntegral(const std::string& name, const T& value, const bool& humanReadable = false) noexcept;
+        ReplaceableVars& addIntegral(const std::string& name, const T value, const bool humanReadable = false) noexcept;
 
         /**
          * Adds a floating point value.
@@ -49,8 +49,8 @@ namespace glib {
          * @return This object.
          */
         template <std::floating_point T>
-        ReplaceableVars& addFloatingPoint(const std::string& name, const T& value, const int& precision = DefaultPrecision,
-                                  const bool& humanReadable = false) noexcept;
+        ReplaceableVars& addFloatingPoint(const std::string& name, const T value, const int precision = DefaultPrecision,
+                                  const bool humanReadable = false) noexcept;
 
         /**
          * Replace inline variables with values.
@@ -58,6 +58,7 @@ namespace glib {
          * @param str String with variables.
          * @return The replaced string.
          */
+        [[nodiscard]]
         std::string replace(const std::string& str) noexcept;
 
     //    std::string string() const;

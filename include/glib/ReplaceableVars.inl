@@ -9,7 +9,7 @@
 namespace glib {
 
     template <std::integral T>
-    ReplaceableVars& ReplaceableVars::addIntegral(const std::string& name, const T& value, const bool& humanReadable) noexcept {
+    ReplaceableVars& ReplaceableVars::addIntegral(const std::string& name, const T value, const bool humanReadable) noexcept {
         std::string str = std::to_string(value);
         if (humanReadable) {
             insertThousandSeparators(str);
@@ -18,8 +18,8 @@ namespace glib {
     }
 
     template <std::floating_point T>
-    ReplaceableVars& ReplaceableVars::addFloatingPoint(const std::string& name, const T& value, const int& precision,
-                                               const bool& humanReadable) noexcept {
+    ReplaceableVars& ReplaceableVars::addFloatingPoint(const std::string& name, const T value, const int precision,
+                                               const bool humanReadable) noexcept {
         std::ostringstream ss;
         if (precision != DefaultPrecision) {
             ss << std::fixed << std::setprecision(precision);

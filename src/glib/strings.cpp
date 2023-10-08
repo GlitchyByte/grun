@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <sstream>
-#include "glib/gstrings.h"
+#include "glib/strings.h"
 
 namespace glib::strings {
 
