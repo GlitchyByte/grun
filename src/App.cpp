@@ -31,15 +31,17 @@ void App::printUsage() {
     const std::string text = glib::strings::unindent(R"===(
         Run a Gradle project.
         Usage:
-          ${app} ${param1} ${param2}
+          ${app} <${param1}> <${param2}> [${args}]
 
-          ${param1} Directory of your main project Gradle root (e.g., "some/sub/dir" or ".")
-          ${param2}             Project name (e.g., "glib")
+          ${param1} Directory of your main project Gradle root (e.g., "~/my/app/here" or ".")
+          ${param2}             Project name (e.g., "myapp")
+          ${args}            Arguments for the running project.
         )===");
     const std::string usage = glib::ReplaceableVars()
         .addString("app", glib::console::coloredText("grun", cmdColor))
-        .addString("param1", glib::console::coloredText("PROJECT_GRADLE_ROOT", argColor))
-        .addString("param2", glib::console::coloredText("PROJECT", argColor))
+        .addString("param1", glib::console::coloredText("project_gradle_root", argColor))
+        .addString("param2", glib::console::coloredText("project", argColor))
+        .addString("args", glib::console::coloredText("args ...", argColor))
         .replace(text);
     std::cout << usage;
 }
