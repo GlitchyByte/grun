@@ -15,7 +15,9 @@ GradleParams::GradleParams(const std::vector<std::string>& args) noexcept {
         return;
     }
     try {
-        gradleRoot = std::filesystem::canonical(args[1]).string();
+        const std::string& rawRoot = args[1];
+        const std::string param = rawRoot.starts_with('~') ? std::getenv("HOME") + rawRoot.substr(1) : rawRoot;
+        gradleRoot = std::filesystem::canonical(param).string();
     } catch (const std::exception& e) {
         gradleRoot = std::string();
         gradleProject = std::string();
@@ -29,22 +31,6 @@ GradleParams::GradleParams(const std::vector<std::string>& args) noexcept {
         projectArgs[i - 3] = args[i];
     }
     valid = true;
-}
-
-std::string GradleParams::getGradleRoot() const noexcept {
-    return gradleRoot;
-}
-
-std::string GradleParams::getGradleProject() const noexcept {
-    return gradleProject;
-}
-
-std::vector<std::string> GradleParams::getProjectArgs() const noexcept {
-    return projectArgs;
-}
-
-bool GradleParams::isValid() const noexcept {
-    return valid;
 }
 
 std::string GradleParams::string() const noexcept {

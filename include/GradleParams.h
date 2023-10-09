@@ -10,16 +10,16 @@ public:
     explicit GradleParams(const std::vector<std::string>& args) noexcept;
 
     [[nodiscard]]
-    std::string getGradleRoot() const noexcept;
+    inline std::string getGradleRoot() const noexcept { return gradleRoot; }
 
     [[nodiscard]]
-    std::string getGradleProject() const noexcept;
+    inline std::string getGradleProject() const noexcept { return gradleProject; }
 
     [[nodiscard]]
-    std::vector<std::string> getProjectArgs() const noexcept;
+    inline std::vector<std::string> getProjectArgs() const noexcept { return projectArgs; }
 
     [[nodiscard]]
-    bool isValid() const noexcept;
+    inline bool isValid() const noexcept { return valid; }
 
     [[nodiscard]]
     std::string string() const noexcept;
