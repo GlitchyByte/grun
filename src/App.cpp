@@ -3,13 +3,18 @@
 
 #include <map>
 #include <thread>
+#include "glib/ShutdownMonitor.h"
 #include "glib/strings.h"
 #include "GradleParams.h"
-#include "App.h"
 #include "glib/ReplaceableVars.h"
+#include "App.h"
+
+auto shutdownMonitor = glib::ShutdownMonitor::create();
 
 void sayHi() {
     std::cout << "Heyas!" << std::endl;
+    shutdownMonitor->awaitShutdown();
+    std::cout << "Bye!" << std::endl;
 }
 
 int App::run(const std::vector<std::string>& args) {
@@ -22,6 +27,9 @@ int App::run(const std::vector<std::string>& args) {
     std::cout << "Here we go..." << std::endl;
     std::thread thread(sayHi);
     std::cout << "Waiting..." << std::endl;
+    shutdownMonitor->whileLive(std::chrono::seconds {1}, [] {
+        std::cout << "...twiddling..." << std::endl;
+    });
     thread.join();
     std::cout << "We out!" << std::endl;
     return 0;
