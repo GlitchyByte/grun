@@ -8,8 +8,8 @@
 GradleParams::GradleParams(const std::vector<std::string>& args) noexcept {
     const size_t size = args.size();
     if (size < 3) {
-        gradleRoot = std::string();
-        gradleProject = std::string();
+        gradleRoot = std::string {};
+        gradleProject = std::string {};
         projectArgs = std::vector<std::string>(0);
         valid = false;
         return;
@@ -19,8 +19,8 @@ GradleParams::GradleParams(const std::vector<std::string>& args) noexcept {
         const std::string param = rawRoot.starts_with('~') ? std::getenv("HOME") + rawRoot.substr(1) : rawRoot;
         gradleRoot = std::filesystem::canonical(param).string();
     } catch (const std::exception& e) {
-        gradleRoot = std::string();
-        gradleProject = std::string();
+        gradleRoot = std::string {};
+        gradleProject = std::string {};
         projectArgs = std::vector<std::string>(0);
         valid = false;
         return;
