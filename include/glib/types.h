@@ -9,4 +9,5 @@
 namespace glib {
 
     typedef std::map<const std::string, std::string> mapStringString;
+    typedef std::vector<std::string> vectorString;
 }
