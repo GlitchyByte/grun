@@ -61,7 +61,13 @@ namespace glib {
         [[nodiscard]]
         std::string replace(const std::string& str) noexcept;
 
-    //    std::string string() const;
+        /**
+         * String representation.
+         *
+         * @return The string representation.
+         */
+        [[nodiscard]]
+        std::string string() const noexcept;
 
     private:
         glib::mapStringString vars;

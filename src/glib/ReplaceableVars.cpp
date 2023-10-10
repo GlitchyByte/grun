@@ -36,4 +36,20 @@ namespace glib {
         }
         return replaced;
     }
+
+    std::string ReplaceableVars::string() const noexcept {
+        std::ostringstream ss;
+        ss << "{ ";
+        bool first = true;
+        for (const auto& entries: vars) {
+            if (first) {
+                first = false;
+            } else {
+                ss << ", ";
+            }
+            ss << entries.first << ": " << entries.second;
+        }
+        ss << " }";
+        return ss.str();
+    }
 }
