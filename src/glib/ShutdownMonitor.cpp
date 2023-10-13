@@ -6,8 +6,8 @@
 
 namespace glib {
 
-    bool _false = false;
-    std::atomic<bool> generalShutdownInitiated = false;
+    constinit bool _false { false };
+    std::atomic<bool> generalShutdownInitiated { false };
     std::mutex generalShutdownLock;
     std::vector<std::shared_ptr<ShutdownMonitor>> shutdownMonitors;
 
@@ -23,19 +23,23 @@ namespace glib {
     }
 
     std::shared_ptr<ShutdownMonitor> ShutdownMonitor::create() noexcept {
-        static bool initialized = false;
+        static bool initialized { false };
         if (!initialized) {
             std::signal(SIGINT, triggerShutdown);
             std::signal(SIGTERM, triggerShutdown);
             initialized = true;
         }
         std::lock_guard<std::mutex> lock { generalShutdownLock };
-        const bool isShuttingDown = generalShutdownInitiated;
+        const bool isShuttingDown { generalShutdownInitiated };
         const std::shared_ptr<ShutdownMonitor> monitor { new ShutdownMonitor(isShuttingDown) };
         if (!isShuttingDown) {
             shutdownMonitors.push_back(monitor);
         }
         return monitor;
+    }
+
+    bool ShutdownMonitor::shouldShutdown() const noexcept {
+        return isShuttingDown;
     }
 
     void ShutdownMonitor::shutdown() noexcept {
@@ -49,8 +53,7 @@ namespace glib {
             return;
         }
         std::unique_lock<std::mutex> lock { shutdownLock };
-        std::chrono::time_point<std::chrono::steady_clock> limit
-            { std::chrono::steady_clock::now() + timeout };
+        std::chrono::time_point<std::chrono::steady_clock> limit { std::chrono::steady_clock::now() + timeout };
         shuttingDown.wait_until(lock, limit, [&] { return isShuttingDown.load(); });
     }
 
@@ -62,7 +65,7 @@ namespace glib {
         shuttingDown.wait(lock, [&] { return isShuttingDown.load(); });
     }
 
-    void ShutdownMonitor::whileLive(const std::chrono::milliseconds& cadence, const std::function<void()>& action) noexcept {
+    void ShutdownMonitor::whileLive(const std::chrono::milliseconds& cadence, const std::function<void()>& action) {
         while (!shouldShutdown()) {
             action();
             awaitShutdown(cadence);

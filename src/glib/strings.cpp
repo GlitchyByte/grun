@@ -1,40 +1,53 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include <sstream>
 #include "glib/strings.h"
 
 namespace glib::strings {
 
-    std::vector<std::string> split(const std::string& str, const std::string& delimiter) noexcept {
-        const size_t delimiterSize = delimiter.size();
-        if (delimiterSize == 0) {
-            return std::vector<std::string> { str };
-        }
-        size_t pos = str.find(delimiter);
+    std::string replace(const std::string_view& str, const std::string_view& token, const std::string_view& value) noexcept {
+        size_t pos = str.find(token);
         if (pos == std::string::npos) {
-            return std::vector<std::string> { str };
+            return "";
         }
-        size_t start = 0;
-        std::vector<std::string> lines;
+        std::string newStr { str };
+        return newStr.replace(pos, token.length(), value);
+    }
+
+    std::vector<std::string_view> splitWeak(const std::string_view& str, const std::string_view& delimiter) noexcept {
+        const size_t delimiterSize { delimiter.size() };
+        size_t pos = str.find(delimiter);
+        if ((delimiterSize == 0) || (pos == std::string::npos)) {
+            return std::vector<std::string_view> { std::string { str } };
+        }
+        size_t start { 0 };
+        std::vector<std::string_view> lines;
         while (pos != std::string::npos) {
-            const auto line = str.substr(start, pos - start);
-            lines.push_back(line);
+            lines.emplace_back(str.substr(start, pos - start));
             start = pos + delimiterSize;
             pos = str.find(delimiter, start);
         }
-        const auto line = str.substr(start);
-        lines.push_back(line);
+        lines.emplace_back(str.substr(start));
         return lines;
     }
 
-    std::string unindent(const std::string& str) noexcept {
-        if (str.empty()) {
-            return str;
+    std::vector<std::string> split(const std::string_view& str, const std::string_view& delimiter) noexcept {
+        const std::vector<std::string_view> weak { splitWeak(str, delimiter) };
+        const size_t weakSize = weak.size();
+        std::vector<std::string> lines { weakSize };
+        for (size_t i = 0; i < weakSize; ++i) {
+            lines[i] = weak[i];
         }
-        std::vector<std::string> lines = split(str, "\n");
+        return lines;
+    }
+
+    std::string unindent(const std::string_view& str) noexcept {
+        if (str.empty()) {
+            return "";
+        }
+        auto lines = splitWeak(str, "\n");
         if (lines.size() == 1) {
-            return str;
+            return std::string { str };
         }
         if (lines[0].empty()) {
             // We allow a 1st new line so that it looks good in code.
@@ -42,12 +55,12 @@ namespace glib::strings {
             lines.erase(lines.begin());
         }
         // Find indentation.
-        size_t indent = std::string::npos;
-        bool foundDifference = false;
+        size_t indent { std::string::npos };
+        bool foundDifference { false };
         while (!foundDifference) {
             char ch;
             for (size_t index = 0; index < lines.size(); ++index) {
-                const std::string line = lines[index];
+                const auto& line { lines[index] };
                 if (line.empty()) {
                     continue;
                 }
@@ -68,8 +81,7 @@ namespace glib::strings {
                     foundDifference = true;
                     break;
                 }
-                foundDifference = (indent >= line.size()) ||
-                        (line[indent] != ch);
+                foundDifference = (indent >= line.size()) || (line[indent] != ch);
                 if (foundDifference) {
                     break;
                 }
@@ -81,7 +93,7 @@ namespace glib::strings {
         }
         std::ostringstream ss;
         bool first = true;
-        for (const std::string& line: lines) {
+        for (const auto& line: lines) {
             if (first) {
                 first = false;
             } else {
@@ -98,4 +110,23 @@ namespace glib::strings {
         }
         return ss.str();
     }
+
+    std::string& insertThousandSeparatorsInPlace(std::string& str) noexcept {
+        const size_t period = str.find('.');
+        const size_t start = period == std::string::npos ? str.length() : period;
+        const size_t finish = str.starts_with('-') ? 4 : 3;
+        size_t index = start;
+        while (index > finish) {
+            index -= 3;
+            str.insert(index, ",");
+        }
+        return str;
+    }
+
+    std::string insertThousandSeparators(const std::string_view& str) noexcept {
+        std::string newStr { str };
+        return insertThousandSeparatorsInPlace(newStr);
+    }
+
+    constinit int DefaultPrecision = -1;
 }

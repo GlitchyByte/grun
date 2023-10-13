@@ -3,16 +3,16 @@
 
 #pragma once
 
-#include <iostream>
-#include "glib/ReplaceableVars.h"
+#include <string>
 
 namespace glib::console {
 
     typedef uint32_t color_t;
 
-    const std::string csi = "\u001b[";
-    const std::string csiColorReset = csi + "0m";
-    const std::string csiColorForeground = csi + "38;5;${code}m";
+    #define CODE "@"
+    #define CSI "\u001b["
+    #define CSI_COLOR_RESET CSI "0m"
+    #define CSI_COLOR_FOREGROUND CSI "38;5;" CODE "m"
 
     /**
      * Converts rgb values into a single color code.
@@ -23,12 +23,7 @@ namespace glib::console {
      * @return The color code.
      */
     [[nodiscard]]
-    consteval color_t rgb(const color_t r, const color_t g, const color_t b) noexcept {
-        const color_t _r = std::min(r, static_cast<color_t>(6));
-        const color_t _g = std::min(g, static_cast<color_t>(6));
-        const color_t _b = std::min(b, static_cast<color_t>(6));
-        return 16 + (36 * _r) + (6 * _g) + _b;
-    }
+    extern color_t rgb(const color_t r, const color_t g, const color_t b) noexcept;
 
     /**
      * Converts a grey step into a color code.
@@ -37,11 +32,15 @@ namespace glib::console {
      * @return The color code.
      */
     [[nodiscard]]
-    consteval color_t grey(const color_t step) noexcept {
-        const color_t _step = std::min(step, static_cast<color_t>(24));
-        return 232 + _step;
-    }
+    extern color_t grey(const color_t step) noexcept;
 
+    /**
+     * Returns a string that represents the given string in the given color.
+     *
+     * @param str String to apply color.
+     * @param color Color.
+     * @return The string in color.
+     */
     [[nodiscard]]
-    std::string coloredText(const std::string& str, const color_t color) noexcept;
+    std::string colorText(const std::string& str, const color_t color) noexcept;
 }

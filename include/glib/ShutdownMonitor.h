@@ -4,8 +4,8 @@
 #pragma once
 
 #include <atomic>
+#include <mutex>
 #include <chrono>
-#include "glib/types.h"
 
 namespace glib {
 
@@ -28,7 +28,7 @@ namespace glib {
          * @return True when an orderly shutdown should occur.
          */
         [[nodiscard]]
-        inline bool shouldShutdown() const noexcept { return isShuttingDown; }
+        bool shouldShutdown() const noexcept;
 
         /**
          * Manually triggers an orderly shutdown.
@@ -58,11 +58,11 @@ namespace glib {
          * @param cadence Cadence at which to execute the action.
          * @param action Action to execute.
          */
-        void whileLive(const std::chrono::milliseconds& cadence, const std::function<void()>& action) noexcept;
+        void whileLive(const std::chrono::milliseconds& cadence, const std::function<void()>& action);
 
 
     private:
-        std::atomic<bool> isShuttingDown = false;
+        std::atomic<bool> isShuttingDown { false };
         std::mutex shutdownLock;
         std::condition_variable shuttingDown;
 
