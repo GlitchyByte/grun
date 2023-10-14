@@ -1,41 +1,70 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include <map>
 #include <thread>
-#include "glib/ShutdownMonitor.h"
-#include "glib/strings.h"
-#include "GradleParams.h"
-#include "glib/ReplaceableVars.h"
+#include <sstream>
+#include <iostream>
 #include "App.h"
+#include "glib/strings.h"
+#include "glib/ReplaceableVars.h"
+#include "glib/process.h"
 
-auto shutdownMonitor = glib::ShutdownMonitor::create();
+const glib::console::color_t App::textColor { glib::console::rgb(1, 1, 1) };
+const glib::console::color_t App::cmdColor { glib::console::rgb(3, 5, 3) };
+const glib::console::color_t App::argColor { glib::console::rgb(0, 2, 0) };
 
-void sayHi() {
-    std::cout << "Heyas!" << std::endl;
-    shutdownMonitor->awaitShutdown();
-    std::cout << "Bye!" << std::endl;
-}
+//void sayHi() {
+//    std::cout << "Heyas!" << std::endl;
+//    std::cout << "Bye!" << std::endl;
+//}
 
-int App::run(const std::vector<std::string>& args) {
-    const GradleParams gradleParams(args);
+int App::run(const std::vector<std::string_view>& args) noexcept {
+    const GradleParams gradleParams { args };
     if (!gradleParams.isValid()) {
         printUsage();
         return 1;
     }
-    std::cout << "params: " << gradleParams.string() << std::endl;
-    std::cout << "Here we go..." << std::endl;
-    std::thread thread(sayHi);
-    std::cout << "Waiting..." << std::endl;
-    shutdownMonitor->whileLive(std::chrono::seconds {1}, [] {
-        std::cout << "...twiddling..." << std::endl;
-    });
-    thread.join();
+    const auto& gradleProperties = retrieveGradleProperties(gradleParams);
+    for (const auto& entry: gradleProperties) {
+        std::cout << entry.first << ": " << entry.second << std::endl;
+    }
+//    system(R"===(echo "gimme: ";read user_input;echo "u: ${user_input}")===");
+//    std::cout << "Here we go..." << std::endl;
+//    std::thread thread { sayHi };
+//    std::cout << "Waiting..." << std::endl;
+//    thread.join();
     std::cout << "We out!" << std::endl;
     return 0;
 }
 
-void App::printUsage() {
+std::map<std::string, std::string> App::retrieveGradleProperties(const GradleParams& gradleParams) noexcept {
+#ifdef _WIN32
+    const std::string gradleCommand { "gradlew.bat" };
+#else
+    const std::string gradleCommand { "./gradlew" };
+#endif
+    const std::string command { glib::ReplaceableVars()
+        .add("gradle", gradleCommand)
+        .add("project", gradleParams.getGradleProject())
+        .replace("${gradle} ${project}:build ${project}:properties")
+    };
+    std::map<std::string, std::string> properties;
+    glib::process::execute(command, gradleParams.getGradleRoot(), nullptr, nullptr,
+            [&properties](const std::string_view& line) {
+        // TODO: Use regex!
+        const size_t pos { line.find(": ") };
+        if (pos == std::string::npos) {
+            return false;
+        }
+        const std::string key { line.substr(0, pos) };
+        const std::string value { line.substr(pos + 1) };
+        properties[key] = value;
+        return true;
+    });
+    return properties;
+}
+
+void App::printUsage() noexcept {
     const std::string text = glib::strings::unindent(R"===(
         Run a Gradle project.
         Usage:
@@ -46,10 +75,10 @@ void App::printUsage() {
           ${args}            Arguments for the running project.
         )===");
     const std::string usage = glib::ReplaceableVars()
-        .addString("app", glib::console::coloredText("grun", cmdColor))
-        .addString("param1", glib::console::coloredText("project_gradle_root", argColor))
-        .addString("param2", glib::console::coloredText("project", argColor))
-        .addString("args", glib::console::coloredText("args ...", argColor))
+        .add("app", glib::console::colorText("grun", cmdColor))
+        .add("param1", glib::console::colorText("project_gradle_root", argColor))
+        .add("param2", glib::console::colorText("project", argColor))
+        .add("args", glib::console::colorText("args ...", argColor))
         .replace(text);
     std::cout << usage;
 }

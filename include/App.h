@@ -3,17 +3,20 @@
 
 #pragma once
 
-#include <iostream>
+#include <map>
+#include <filesystem>
+#include "GradleParams.h"
 #include "glib/console.h"
 
 class App {
 public:
-    static constexpr glib::console::color_t textColor = glib::console::rgb(1, 1, 1);
-    static constexpr glib::console::color_t cmdColor = glib::console::rgb(3, 5, 3);
-    static constexpr glib::console::color_t argColor = glib::console::rgb(0, 2, 0);
+    static const glib::console::color_t textColor;
+    static const glib::console::color_t cmdColor;
+    static const glib::console::color_t argColor;
 
-    static int run(const std::vector<std::string>& args);
+    static int run(const std::vector<std::string_view>& args) noexcept;
 
 private:
-    static void printUsage();
+    static void printUsage() noexcept;
+    static std::map<std::string, std::string> retrieveGradleProperties(const GradleParams& gradleParams) noexcept;
 };
