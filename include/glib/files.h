@@ -8,5 +8,5 @@
 namespace glib::files {
 
     [[nodiscard]]
-    std::filesystem::path canonicalPath(const std::filesystem::path& path);
+    std::filesystem::path canonicalPath(const std::filesystem::path& path) noexcept;
 }
