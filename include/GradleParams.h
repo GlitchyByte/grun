@@ -3,29 +3,29 @@
 
 #pragma once
 
-#include <iostream>
+#include <string>
 
 class GradleParams {
 public:
-    explicit GradleParams(const std::vector<std::string>& args) noexcept;
+    explicit GradleParams(const std::vector<std::string_view>& args) noexcept;
 
     [[nodiscard]]
-    inline std::string getGradleRoot() const noexcept { return gradleRoot; }
+    std::filesystem::path getGradleRoot() const noexcept;
 
     [[nodiscard]]
-    inline std::string getGradleProject() const noexcept { return gradleProject; }
+    std::string getGradleProject() const noexcept;
 
     [[nodiscard]]
-    inline std::vector<std::string> getProjectArgs() const noexcept { return projectArgs; }
+    std::vector<std::string> getProjectArgs() const noexcept;
 
     [[nodiscard]]
-    inline bool isValid() const noexcept { return valid; }
+    bool isValid() const noexcept;
 
     [[nodiscard]]
     std::string string() const noexcept;
 
 private:
-    std::string gradleRoot;
+    std::filesystem::path gradleRoot;
     std::string gradleProject;
     std::vector<std::string> projectArgs;
     bool valid;
