@@ -4,6 +4,7 @@
 #include <thread>
 #include <sstream>
 #include <iostream>
+#include <regex>
 #include "App.h"
 #include "glib/strings.h"
 #include "glib/ReplaceableVars.h"
@@ -49,15 +50,16 @@ std::map<std::string, std::string> App::retrieveGradleProperties(const GradlePar
         .replace("${gradle} ${project}:build ${project}:properties")
     };
     std::map<std::string, std::string> properties;
+    const std::regex re { "^([a-zA-Z]+): ([^ ].*)$" };
+    std::smatch match;
     glib::process::execute(command, gradleParams.getGradleRoot(), nullptr, nullptr,
-            [&properties](const std::string_view& line) {
-        // TODO: Use regex!
-        const size_t pos { line.find(": ") };
-        if (pos == std::string::npos) {
+            [&](const std::string_view& line) {
+        const std::string str { line };
+        if (!std::regex_match(str, match, re) || (match.size() != 3)) {
             return false;
         }
-        const std::string key { line.substr(0, pos) };
-        const std::string value { line.substr(pos + 1) };
+        const std::string key { match[1] };
+        const std::string value { match[2] };
         properties[key] = value;
         return true;
     });
