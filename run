@@ -16,7 +16,7 @@ name=$1
 shift
 readonly args=$*
 
-./build Release
+./build MinSizeRel
 
 echo "${c_bold}${cf_black}Running: ${cf_white}${name}${c_reset}"
 "./bin/${name}" $args
