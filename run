@@ -5,6 +5,7 @@
 # Runs project.
 
 set -u
+set -e
 . ./_gscript
 
 if [ $# -lt 1 ]; then
