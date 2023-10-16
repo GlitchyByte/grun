@@ -1,8 +1,6 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include <thread>
-#include <sstream>
 #include <iostream>
 #include <regex>
 #include "App.h"
@@ -115,11 +113,6 @@ int extractBin(const GradleParams& gradleParams, std::filesystem::path* binPath)
     return 0;
 }
 
-//void sayHi() {
-//    std::cout << "Heyas!" << std::endl;
-//    std::cout << "Bye!" << std::endl;
-//}
-
 int App::run(const std::vector<std::string_view>& args) noexcept {
     const GradleParams gradleParams { args };
     if (!gradleParams.isValid()) {
@@ -127,18 +120,14 @@ int App::run(const std::vector<std::string_view>& args) noexcept {
         return 1;
     }
     std::filesystem::path binPath;
-    const int result = extractBin(gradleParams, &binPath);
+    int result = extractBin(gradleParams, &binPath);
     if (result != 0) {
         return result;
     }
-    std::cout << binPath << std::endl;
-//    for (const auto& entry: gradleProperties) {
-//        std::cout << entry.first << ": " << entry.second << std::endl;
-//    }
-//    system(R"===(echo "gimme: ";read user_input;echo "u: ${user_input}")===");
-//    std::cout << "Here we go..." << std::endl;
-//    std::thread thread { sayHi };
-//    std::cout << "Waiting..." << std::endl;
-//    thread.join();
+    const std::string command { binPath.string() + ' ' + glib::strings::fromVector(gradleParams.getProjectArgs(), " ") };
+    result = std::system(command.c_str());
+    std::cout << glib::console::colorText("Exit code: ", textColor)
+            << glib::console::colorText(std::to_string(result), highlightColor)
+            << std::endl;
     return 0;
 }
