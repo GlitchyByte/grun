@@ -20,7 +20,10 @@ namespace glib::console {
         return 232 + step;
     }
 
-    std::string colorText(const std::string& str, const color_t color) noexcept {
+    std::string colorText(const std::string_view& str, const color_t color) noexcept {
+        if (str.empty()) {
+            return "";
+        }
         const auto startColor { glib::strings::replace(CSI_COLOR_FOREGROUND, CODE, std::to_string(color)) };
         std::ostringstream ss;
         ss << startColor << str << CSI_COLOR_RESET;

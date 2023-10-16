@@ -42,5 +42,5 @@ namespace glib::console {
      * @return The string in color.
      */
     [[nodiscard]]
-    std::string colorText(const std::string& str, const color_t color) noexcept;
+    std::string colorText(const std::string_view& str, const color_t color) noexcept;
 }
