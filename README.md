@@ -15,7 +15,7 @@ As opposed to Gradle's run task which doesn't attach a proper console and simply
 # /solution
 #   /code
 #     /say
-#   /run
+#   /grun
 ./grun code say "Hello, world!"
 ```
 
