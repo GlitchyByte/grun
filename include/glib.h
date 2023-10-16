@@ -5,7 +5,7 @@
 
 #define GLIB_STRINGS
     #define GLIB_CONSOLE
-#define GLIB_FILES
+//#define GLIB_FILES
 #define GLIB_PROCESS
 #define GLIB_REPLACEABLE_VARS
 //#define GLIB_SHUTDOWN_MONITOR
