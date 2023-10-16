@@ -1,12 +1,10 @@
-## *THIS IS A WORK IN PROGRESS*
-
 # grun
 
-![Version](https://img.shields.io/badge/Version-0.1.0-blue)
+![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 
-This is a Gradle project runner. It builds, unpacks, and runs a Gradle project on the current console, also allows you full control of `SIGINT` (Ctrl+C).
-
-As opposed to Gradle's run task which doesn't attach a proper console, and simply kills your app immediately on `SIGINT`.
+This is a Gradle project runner. It builds, unpacks, and runs a Gradle project on the current console.
+Also allows `SIGINT` (Ctrl+C) to be captured by your application.
+As opposed to Gradle's run task which doesn't attach a proper console and simply kills your app immediately on `SIGINT`.
 
 ### To use:
 
@@ -25,11 +23,15 @@ As opposed to Gradle's run task which doesn't attach a proper console, and simpl
 
 Clone this repo. On macOS or Linux:
 
-    ./build Release
+    ./build MinSizeRel clean
 
 On Windows:
 
-    cmake -DCMAKE_BUILD_TYPE=Release -B build.cmake -S .
-    cmake --build build.cmake --config Release
+*Windows hasn't been tested. If you try it, let me know if there are any issues.*
+
+    cmake -DCMAKE_BUILD_TYPE=MinSizeRel -B build.cmake -S .
+    cmake --build build.cmake --config MinSizeRel
+
+#### Binary
 
 Binary should be in `bin` directory. It is small enough to be committed as part of your solution.
