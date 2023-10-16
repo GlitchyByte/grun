@@ -9,6 +9,32 @@
 namespace glib::strings {
 
     /**
+     * Converts a C string array into a vector of string_views.
+     *
+     * <p>The contents of the vector will be valid as long as the original array is valid.
+     *
+     * <p>This function is specifically designed to convert main function args
+     * into a string vector.
+     *
+     * @param argc String array size.
+     * @param argv Array of C strings.
+     * @return A string vector of the arguments.
+     */
+    std::vector<std::string_view> createVectorStringViewFromCArray(const int argc, const char* argv[]) noexcept;
+
+    /**
+     * Converts a C string array into a vector of strings.
+     *
+     * <p>This function is specifically designed to convert main function args
+     * into a string vector.
+     *
+     * @param argc String array size.
+     * @param argv Array of C strings.
+     * @return A string vector of the arguments.
+     */
+    std::vector<std::string> createVectorStringFromCArray(const int argc, const char* argv[]) noexcept;
+
+    /**
      * Convenience replace of a token in a string.
      *
      * <p>This creates a new string, so it is only a shortcut, not efficient for replacing many tokens.
@@ -69,7 +95,7 @@ namespace glib::strings {
      */
     template <typename T>
     [[nodiscard]]
-    std::string fromVector(const std::vector<T>& vector) noexcept;
+    std::string fromVector(const std::vector<T>& vector, const std::string_view& separator = ", ") noexcept;
 
     /**
      * Inserts thousand separator in the given string that must be a numeric representation.
@@ -119,6 +145,21 @@ namespace glib::strings {
 // ----------------================ Templates ================----------------
 namespace glib::strings {
 
+    template<typename T>
+    std::string fromVector(const std::vector<T>& vector, const std::string_view& separator) noexcept {
+        std::ostringstream ss;
+        bool first { true };
+        for (const T& item: vector) {
+            if (first) {
+                first = false;
+            } else {
+                ss << separator;
+            }
+            ss << item;
+        }
+        return ss.str();
+    }
+
     template <std::integral T>
     std::string fromIntegral(const T value) noexcept {
         std::string str { std::to_string(value) };
@@ -136,20 +177,5 @@ namespace glib::strings {
             str = ss.str();
         }
         return insertThousandSeparators(str);
-    }
-
-    template<typename T>
-    std::string fromVector(const std::vector<T>& vector) noexcept {
-        std::ostringstream ss;
-        bool first { true };
-        for (const T& item: vector) {
-            if (first) {
-                first = false;
-            } else {
-                ss << ", ";
-            }
-            ss << item;
-        }
-        return ss.str();
     }
 }
