@@ -4,6 +4,7 @@
 #pragma once
 
 #include <string>
+#include "glib.h"
 
 class GradleParams {
 public:

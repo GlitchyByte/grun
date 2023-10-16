@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "glib.h"
+#ifdef GLIB_SHUTDOWN_MONITOR
+
 #include <atomic>
 #include <mutex>
 #include <chrono>
@@ -69,3 +72,5 @@ namespace glib {
         explicit ShutdownMonitor(const bool shuttingDown) noexcept : isShuttingDown(shuttingDown) {}
     };
 }
+
+#endif // GLIB_SHUTDOWN_MONITOR

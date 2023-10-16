@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "glib.h"
+#ifdef GLIB_PROCESS
+
 #include <filesystem>
 
 namespace glib::process {
@@ -26,3 +29,5 @@ namespace glib::process {
             std::vector<std::string>* lines = nullptr, int* exitCode = nullptr,
             const std::function<bool(const std::string_view&)>& filter = nullptr);
 }
+
+#endif // GLIB_PROCESS

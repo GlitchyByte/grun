@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "glib.h"
+#ifdef GLIB_FILES
+
 #include <filesystem>
 
 namespace glib::files {
@@ -10,3 +13,5 @@ namespace glib::files {
     [[nodiscard]]
     std::filesystem::path canonicalPath(const std::filesystem::path& path) noexcept;
 }
+
+#endif

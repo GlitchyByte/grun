@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "glib.h"
+#ifdef GLIB_REPLACEABLE_VARS
+
 #include <map>
 
 namespace glib {
@@ -52,3 +55,5 @@ namespace glib {
         std::map<std::string, std::string> vars;
     };
 }
+
+#endif // GLIB_REPLACEABLE_VARS

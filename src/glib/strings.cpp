@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "glib/strings.h"
+#ifdef GLIB_STRINGS
 
 namespace glib::strings {
 
@@ -148,3 +149,5 @@ namespace glib::strings {
 
     constinit int DefaultPrecision = -1;
 }
+
+#endif // GLIB_STRINGS

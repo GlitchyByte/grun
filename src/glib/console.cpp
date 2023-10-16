@@ -1,9 +1,11 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
+#include "glib/console.h"
+#ifdef GLIB_CONSOLE
+
 #include <cassert>
 #include <sstream>
-#include "glib/console.h"
 #include "glib/strings.h"
 
 namespace glib::console {
@@ -30,3 +32,5 @@ namespace glib::console {
         return ss.str();
     }
 }
+
+#endif // GLIB_CONSOLE

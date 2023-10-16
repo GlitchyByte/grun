@@ -5,8 +5,8 @@
 
 #include <map>
 #include <filesystem>
+#include "glib.h"
 #include "GradleParams.h"
-#include "glib/console.h"
 
 class App {
 public:

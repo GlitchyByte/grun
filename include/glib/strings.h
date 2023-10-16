@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "glib.h"
+#ifdef GLIB_STRINGS
+
 #include <sstream>
 #include <iomanip>
 
@@ -179,3 +182,5 @@ namespace glib::strings {
         return insertThousandSeparators(str);
     }
 }
+
+#endif // GLIB_STRINGS

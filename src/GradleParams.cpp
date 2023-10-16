@@ -3,7 +3,6 @@
 
 #include <filesystem>
 #include "GradleParams.h"
-#include "glib/strings.h"
 
 GradleParams::GradleParams(const std::vector<std::string_view>& args) noexcept {
     const size_t size { args.size() };

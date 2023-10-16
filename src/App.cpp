@@ -4,9 +4,6 @@
 #include <iostream>
 #include <regex>
 #include "App.h"
-#include "glib/strings.h"
-#include "glib/ReplaceableVars.h"
-#include "glib/process.h"
 
 const glib::console::color_t textColor { glib::console::rgb(1, 1, 1) };
 const glib::console::color_t highlightColor { glib::console::rgb(5, 5, 5) };

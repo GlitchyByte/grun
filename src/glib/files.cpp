@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "glib/files.h"
+#ifdef GLIB_FILES
 
 namespace glib::files {
 
@@ -15,3 +16,5 @@ namespace glib::files {
         return std::filesystem::weakly_canonical(fullPath);
     }
 }
+
+#endif

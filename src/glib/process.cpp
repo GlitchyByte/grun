@@ -1,8 +1,10 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include <sstream>
 #include "glib/process.h"
+#ifdef GLIB_PROCESS
+
+#include <sstream>
 
 namespace glib::process {
 
@@ -52,3 +54,5 @@ namespace glib::process {
         return false;
     }
 }
+
+#endif // GLIB_PROCESS
