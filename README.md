@@ -21,7 +21,9 @@ As opposed to Gradle's run task which doesn't attach a proper console and simply
 
 ### To build:
 
-Clone this repo. On macOS or Linux:
+Clone this repo.
+
+Then, on macOS or Linux:
 
     ./build MinSizeRel clean
 
@@ -34,4 +36,4 @@ On Windows:
 
 #### Binary
 
-Binary should be in `bin` directory. It is small enough to be committed as part of your solution.
+After building, `grun` binary is in `bin` directory.
