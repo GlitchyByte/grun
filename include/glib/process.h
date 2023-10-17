@@ -7,6 +7,7 @@
 #ifdef GLIB_PROCESS
 
 #include <filesystem>
+#include <deque>
 
 namespace glib::process {
 
@@ -19,14 +20,14 @@ namespace glib::process {
      *
      * @param command Full command line as it would be on a terminal.
      * @param workDir Directory to run the command on.
-     * @param lines Optional vector to accumulate lines into.
+     * @param lines Optional deque to accumulate lines into.
      * @param exitCode Optional exit code from command.
      * @param filter Optional lambda to filter or process each line.
      *              filter must return true to add the line to lines, false to skip.
      * @return True if command execution was successful.
      */
     bool execute(const std::string_view& command, const std::optional<std::filesystem::path>& workDir = std::nullopt,
-            std::vector<std::string>* lines = nullptr, int* exitCode = nullptr,
+            std::deque<std::string>* lines = nullptr, int* exitCode = nullptr,
             const std::function<bool(const std::string_view&)>& filter = nullptr);
 }
 

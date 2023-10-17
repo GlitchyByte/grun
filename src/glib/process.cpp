@@ -9,9 +9,9 @@
 namespace glib::process {
 
     bool execute(const std::string_view& command, const std::optional<std::filesystem::path>& workDir,
-            std::vector<std::string>* lines, int* exitCode,
+            std::deque<std::string>* lines, int* exitCode,
             const std::function<bool(const std::string_view&)>& filter) {
-        const auto& originalDir = std::filesystem::current_path();
+        const auto& originalDir { std::filesystem::current_path() };
         if (workDir.has_value()) {
             std::filesystem::current_path(workDir.value());
         }
