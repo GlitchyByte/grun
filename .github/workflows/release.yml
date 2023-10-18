@@ -71,7 +71,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         env:
           ZIP_NAME: ${{ env.PROJECT_NAME }}-linux-x64.tar.gz
-          BIN: bin
+          BIN: code/bin
           PROJECT_BIN: ${{ env.PROJECT_NAME }}
         run: |
           tar -czf ${{ env.ZIP_NAME }} -C ${{ env.BIN }} ${{ env.PROJECT_BIN }}
@@ -81,7 +81,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         env:
           ZIP_NAME: ${{ env.PROJECT_NAME }}-macos-x64.tar.gz
-          BIN: bin
+          BIN: code/bin
           PROJECT_BIN: ${{ env.PROJECT_NAME }}
         run: |
           tar -czf ${{ env.ZIP_NAME }} -C ${{ env.BIN }} ${{ env.PROJECT_BIN }}
@@ -91,7 +91,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         env:
           ZIP_NAME: ${{ env.PROJECT_NAME }}-windows-x64.zip
-          BIN: bin/${{ env.BUILD_TYPE }}
+          BIN: code/bin/${{ env.BUILD_TYPE }}
           PROJECT_BIN: ${{ env.PROJECT_NAME }}.exe
         run: |
           tar -czf ${{ env.ZIP_NAME }} -C ${{ env.BIN }} ${{ env.PROJECT_BIN }}
