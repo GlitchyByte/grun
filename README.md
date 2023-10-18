@@ -22,7 +22,7 @@ As opposed to Gradle's run task which doesn't attach a proper console and simply
 ### To acquire:
 
 It is highly recommended that you build it yourself on your platform.
-But if you want a pre-compiled binary, check the latest release for your platform.
+But if you want a pre-compiled binary, check the [latest release](https://github.com/GlitchyByte/grun/releases) for your platform.
 
 ### To build:
 

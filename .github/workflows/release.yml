@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 env:
   PROJECT_NAME: grun
+  BUILD_TYPE: MinSizeRel
   GH_TOKEN: ${{ github.token }}
 jobs:
   create-release:
@@ -53,17 +54,18 @@ jobs:
 
       - name: Build
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -B build.cmake -S .
-          cmake --build build.cmake --config Release
+          cd code
+          cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -B build.cmake -S .
+          cmake --build build.cmake --config ${{ env.BUILD_TYPE }}
         # Output Linux: ./code/bin/<project>
-        # Output Windows: ./code/bin/Release/<project>.exe
+        # Output Windows: ./code/bin/${{ env.BUILD_TYPE }}/<project>.exe
 
       - name: Zip Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
           version="v$(head -n 1 version)"
           zipName="${{ env.PROJECT_NAME }}-linux-x64.tar.gz"
-          tar -czf ${zipName} -C code/bin ${{ env.PROJECT_NAME }}
+          tar -czf ${zipName} -C bin ${{ env.PROJECT_NAME }}
           gh release upload ${version} ${zipName} --clobber
 
       - name: Zip macOS
@@ -71,7 +73,7 @@ jobs:
         run: |
           version="v$(head -n 1 version)"
           zipName="${{ env.PROJECT_NAME }}-macos-x64.tar.gz"
-          tar -czf $zipName -C code/bin ${{ env.PROJECT_NAME }}
+          tar -czf $zipName -C bin ${{ env.PROJECT_NAME }}
           gh release upload ${version} ${zipName} --clobber
 
       - name: Zip Windows
@@ -79,5 +81,5 @@ jobs:
         run: |
           $version="v$(Get-Content -First 1 -Path version)"
           $zipName="${{ env.PROJECT_NAME }}-windows-x64.zip"
-          tar -czf $zipName -C code/bin/Release ${{ env.PROJECT_NAME }}.exe
+          tar -czf $zipName -C bin/${{ env.BUILD_TYPE }} ${{ env.PROJECT_NAME }}.exe
           gh release upload $version $zipName --clobber
