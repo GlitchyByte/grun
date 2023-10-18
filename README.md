@@ -19,6 +19,11 @@ As opposed to Gradle's run task which doesn't attach a proper console and simply
 ./grun code say "Hello, world!"
 ```
 
+### To acquire:
+
+It is highly recommended that you build it yourself on your platform.
+But if you want a pre-compiled binary, check the latest release for your platform.
+
 ### To build:
 
 Clone this repo.

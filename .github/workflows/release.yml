@@ -1,0 +1,83 @@
+name: make-release
+run-name: Makes a release for grun
+on:
+  workflow_dispatch:
+env:
+  PROJECT_NAME: grun
+  GH_TOKEN: ${{ github.token }}
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Delete version if it exists
+        run: |
+          version="v$(head -n 1 version)"
+          gh release delete ${version} --cleanup-tag -y || true
+
+      - name: Delay between delete and create
+        run: sleep 2
+
+      - name: Create release
+        run: |
+          version="v$(head -n 1 version)"
+          gh release create ${version} -t "${version}" -F release.md
+
+      - name: Keep 10 releases
+        run: |
+          releases=$(gh release list)
+          releaseCount=$(echo "$releases" | wc -l)
+          keep=10
+          if [ "$releaseCount" -gt "$keep" ]; then
+            extra=$((releaseCount - keep))
+            tags=$(echo "$releases" | tail -n $extra | cut -f3)
+            for tag in $tags; do
+              gh release delete ${tag} --cleanup-tag -y
+            done
+          fi
+
+  release-artifacts:
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -B build.cmake -S .
+          cmake --build build.cmake --config Release
+        # Output Linux: ./code/bin/<project>
+        # Output Windows: ./code/bin/Release/<project>.exe
+
+      - name: Zip Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          version="v$(head -n 1 version)"
+          zipName="${{ env.PROJECT_NAME }}-linux-x64.tar.gz"
+          tar -czf ${zipName} -C code/bin ${{ env.PROJECT_NAME }}
+          gh release upload ${version} ${zipName} --clobber
+
+      - name: Zip macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          version="v$(head -n 1 version)"
+          zipName="${{ env.PROJECT_NAME }}-macos-x64.tar.gz"
+          tar -czf $zipName -C code/bin ${{ env.PROJECT_NAME }}
+          gh release upload ${version} ${zipName} --clobber
+
+      - name: Zip Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          $version="v$(Get-Content -First 1 -Path version)"
+          $zipName="${{ env.PROJECT_NAME }}-windows-x64.zip"
+          tar -czf $zipName -C code/bin/Release ${{ env.PROJECT_NAME }}.exe
+          gh release upload $version $zipName --clobber

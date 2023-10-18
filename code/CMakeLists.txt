@@ -10,7 +10,10 @@ endif ()
 
 # Main binary to build.
 set(APP "grun")
-project(${APP} VERSION 1.0.0)
+
+file(STRINGS "../version" APP_VERSION LIMIT_COUNT 1)
+project(${APP} VERSION "${APP_VERSION}")
+message(STATUS "Building: ${APP} v${APP_VERSION}")
 
 # Set C++ standard and binary output dir.
 set(CMAKE_CXX_STANDARD 20)
