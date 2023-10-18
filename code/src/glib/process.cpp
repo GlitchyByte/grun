@@ -18,23 +18,27 @@ namespace glib::process {
         }
         std::ostringstream redirectedCommand;
         redirectedCommand << command << " 2>&1";
-        FILE* pipe = popen(redirectedCommand.str().c_str(), "r");
-        if (!pipe) {
+        FILE* file { popen(redirectedCommand.str().c_str(), "r") };
+        if (!file) {
             std::filesystem::current_path(originalDir);
             return false;
         }
-        const char *line;
-        size_t lineLen;
+        char* line { NULL };
+        size_t lineLen { 0 };
         std::string_view lineView;
         do {
-            line = fgetln(pipe, &lineLen);
-            if ((line == NULL) || ((lines == nullptr) && (filter == nullptr))) {
+            lineLen = getline(&line, &lineLen, file);
+            if ((lineLen == -1) || ((lines == nullptr) && (filter == nullptr))) {
                 continue;
             }
             if (lineLen == 0) {
                 lineView = "";
             } else if (line[lineLen - 1] == '\n') {
+                #ifdef _WIN32
+                lineView = std::string_view { line, lineLen - 2 };
+                #else
                 lineView = std::string_view { line, lineLen - 1 };
+                #endif
             } else {
                 lineView = std::string_view { line, lineLen };
             }
@@ -43,8 +47,9 @@ namespace glib::process {
                     lines->emplace_back(lineView);
                 }
             }
-        } while (line != NULL);
-        const int closeCode = pclose(pipe);
+        } while (lineLen != -1);
+        free(line);
+        const int closeCode = pclose(file);
         std::filesystem::current_path(originalDir);
         if (WIFEXITED(closeCode)) {
             if (exitCode != nullptr) {
