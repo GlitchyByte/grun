@@ -5,7 +5,7 @@ on:
 env:
   PROJECT_NAME: grun
   BUILD_TYPE: MinSizeRel
-  VERSION_FILE_PATH: ${{ GITHUB_WORKSPACE }}/version
+  VERSION_FILE_PATH: ${{ github.workspace }}/version
   GH_TOKEN: ${{ github.token }}
 jobs:
   create-release:
