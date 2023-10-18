@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #define GLIB_STRINGS
     #define GLIB_CONSOLE
 //#define GLIB_FILES
