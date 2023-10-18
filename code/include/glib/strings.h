@@ -6,6 +6,7 @@
 #include "glib.h"
 #ifdef GLIB_STRINGS
 
+#include <vector>
 #include <sstream>
 #include <iomanip>
 
