@@ -4,9 +4,17 @@
 
 # Runs project.
 
+# [Setup]
 set -u
 set -e
+# Capture caller directory and script directory.
+readonly calling_dir="$(pwd)"
+readonly script_dir="$(cd "$(dirname "$0")" && pwd)"
+# Go to script directory and load utilities.
+cd "${script_dir}"
 . ./_gscript
+
+# [Main]
 
 if [ $# -lt 1 ]; then
     echoerr "Need the name of the project."
@@ -16,7 +24,12 @@ name=$1
 shift
 readonly args=$*
 
+# Build.
 ./build MinSizeRel
 
+# Run.
 echo "${c_bold}${cf_black}Running: ${cf_white}${name}${c_reset}"
-"./bin/${name}" $args
+"./code/bin/${name}" $args
+
+# [Teardown]
+cd "${calling_dir}"

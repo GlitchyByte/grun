@@ -4,13 +4,21 @@
 
 # Builds project.
 
+# [Setup]
 set -u
 set -e
+# Capture caller directory and script directory.
+readonly calling_dir="$(pwd)"
+readonly script_dir="$(cd "$(dirname "$0")" && pwd)"
+# Go to script directory and load utilities.
+cd "${script_dir}"
 . ./_gscript
 
+# [Main]
 # Usage.
 printUsage() {
   echo "Usage: build [Debug|Release|MinSizeRel|RelWithDebInfo] [clean]"
+  cd "${calling_dir}"
   exit 1
 }
 
@@ -37,6 +45,7 @@ if [[ "${flavor}" != "Debug" && "${flavor}" != "Release" && "${flavor}" != "MinS
 fi
 
 # Dir constants.
+cd "${script_dir}/code"
 readonly buildConfigDir="build.cmake"
 readonly binDir="bin"
 
@@ -63,3 +72,6 @@ cmake --build "${buildConfigDir}" --config ${flavor}
 
 # Done!
 echo "${cf_green}${c_bold}Build done!${c_reset}"
+
+# [Teardown]
+cd "${calling_dir}"
