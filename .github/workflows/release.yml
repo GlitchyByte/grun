@@ -8,25 +8,29 @@ env:
   VERSION_FILE_PATH: ${{ github.workspace }}/version
   GH_TOKEN: ${{ github.token }}
 jobs:
-  create-release:
+  create_release:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Delete version if it exists
+      - name: Get version
+        id: version
         run: |
           version="v$(head -n 1 ${{ env.VERSION_FILE_PATH }})"
-          gh release delete ${version} --cleanup-tag -y || true
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Delete version if it exists
+        run: gh release delete ${{ steps.version.outputs.version }} --cleanup-tag -y || true
 
       - name: Delay between delete and create
         run: sleep 2
 
       - name: Create release
-        run: |
-          version="v$(head -n 1 ${{ env.VERSION_FILE_PATH }})"
-          gh release create ${version} -t "${version}" -F release.md
+        run: gh release create ${{ steps.version.outputs.version }} -t "${{ steps.version.outputs.version }}" -F release.md
 
       - name: Keep 10 releases
         run: |
@@ -41,9 +45,11 @@ jobs:
             done
           fi
 
-  release-artifacts:
-    needs: create-release
+  release_artifacts:
+    needs: create_release
     runs-on: ${{ matrix.os }}
+    env:
+      VERSION: ${{ needs.create_release.outputs.version }}
 
     strategy:
       matrix:
@@ -51,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -63,24 +69,30 @@ jobs:
 
       - name: Zip Linux
         if: matrix.os == 'ubuntu-latest'
+        env:
+          ZIP_NAME: ${{ env.PROJECT_NAME }}-linux-x64.tar.gz
+          BIN: bin
+          PROJECT_BIN: ${{ env.PROJECT_NAME }}
         run: |
-          version="v$(head -n 1 ${{ env.VERSION_FILE_PATH }})"
-          zipName="${{ env.PROJECT_NAME }}-linux-x64.tar.gz"
-          tar -czf ${zipName} -C bin ${{ env.PROJECT_NAME }}
-          gh release upload ${version} ${zipName} --clobber
+          tar -czf ${{ env.ZIP_NAME }} -C ${{ env.BIN }} ${{ env.PROJECT_BIN }}
+          gh release upload ${{ env.VERSION }} ${{ env.ZIP_NAME }} --clobber
 
       - name: Zip macOS
         if: matrix.os == 'macos-latest'
+        env:
+          ZIP_NAME: ${{ env.PROJECT_NAME }}-macos-x64.tar.gz
+          BIN: bin
+          PROJECT_BIN: ${{ env.PROJECT_NAME }}
         run: |
-          version="v$(head -n 1 ${{ env.VERSION_FILE_PATH }})"
-          zipName="${{ env.PROJECT_NAME }}-macos-x64.tar.gz"
-          tar -czf $zipName -C bin ${{ env.PROJECT_NAME }}
-          gh release upload ${version} ${zipName} --clobber
+          tar -czf ${{ env.ZIP_NAME }} -C ${{ env.BIN }} ${{ env.PROJECT_BIN }}
+          gh release upload ${{ env.VERSION }} ${{ env.ZIP_NAME }} --clobber
 
       - name: Zip Windows
         if: matrix.os == 'windows-latest'
+        env:
+          ZIP_NAME: ${{ env.PROJECT_NAME }}-windows-x64.zip
+          BIN: bin/${{ env.BUILD_TYPE }}
+          PROJECT_BIN: ${{ env.PROJECT_NAME }}.exe
         run: |
-          $version="v$(Get-Content -First 1 -Path '${{ env.VERSION_FILE_PATH }}')"
-          $zipName="${{ env.PROJECT_NAME }}-windows-x64.zip"
-          tar -czf $zipName -C bin/${{ env.BUILD_TYPE }} ${{ env.PROJECT_NAME }}.exe
-          gh release upload $version $zipName --clobber
+          tar -czf ${{ env.ZIP_NAME }} -C ${{ env.BIN }} ${{ env.PROJECT_BIN }}
+          gh release upload ${{ env.VERSION }} ${{ env.ZIP_NAME }} --clobber
