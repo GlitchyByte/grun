@@ -4,6 +4,7 @@
 #include "glib/process.h"
 #ifdef GLIB_PROCESS
 
+#include <cstdio>
 #include <sstream>
 
 namespace glib::process {
