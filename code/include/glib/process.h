@@ -7,6 +7,7 @@
 #ifdef GLIB_PROCESS
 
 #include <optional>
+#include <functional>
 #include <filesystem>
 #include <deque>
 
