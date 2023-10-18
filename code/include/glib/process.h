@@ -6,6 +6,7 @@
 #include "glib.h"
 #ifdef GLIB_PROCESS
 
+#include <optional>
 #include <filesystem>
 #include <deque>
 
