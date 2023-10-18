@@ -48,7 +48,9 @@ namespace glib::process {
                 }
             }
         } while (lineLen != -1);
-        free(line);
+        if (line != NULL) {
+            free(line);
+        }
         const int closeCode = pclose(file);
         std::filesystem::current_path(originalDir);
         if (WIFEXITED(closeCode)) {
