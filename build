@@ -68,7 +68,7 @@ cmake -DCMAKE_BUILD_TYPE=${flavor} -B "${buildConfigDir}" -S .
 
 # Build.
 echo "${c_bold}${cf_black}Building: ${cf_white}${flavor}${c_reset}"
-cmake --build "${buildConfigDir}" --config ${flavor}
+cmake --build "${buildConfigDir}" --config ${flavor} --parallel
 
 # Done!
 echo "${cf_green}${c_bold}Build done!${c_reset}"

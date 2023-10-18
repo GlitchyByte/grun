@@ -56,7 +56,7 @@ jobs:
         run: |
           cd code
           cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -B build.cmake -S .
-          cmake --build build.cmake --config ${{ env.BUILD_TYPE }}
+          cmake --build build.cmake --config ${{ env.BUILD_TYPE }} --parallel
         # Output Linux: ./code/bin/<project>
         # Output Windows: ./code/bin/${{ env.BUILD_TYPE }}/<project>.exe
 
