@@ -14,7 +14,7 @@ GradleParams::GradleParams(const std::vector<std::string_view>& args) noexcept {
         return;
     }
     try {
-        const std::string& rawRoot { args[1] };
+        const std::string rawRoot { args[1] };
         const std::string param { rawRoot.starts_with('~') ? std::getenv("HOME") + rawRoot.substr(1) : rawRoot };
         gradleRoot = std::filesystem::canonical(param);
     } catch (const std::exception& e) {
