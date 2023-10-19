@@ -5,7 +5,14 @@
 #ifdef GLIB_PROCESS
 
 #include <cstdio>
-#include <sstream>
+
+#ifdef _WIN32
+#define popen _popen
+#define pclose _pclose
+#define getline _getline
+#define WIFEXITED(x) (x != -1)
+#define WEXITSTATUS(x) ((x >> 8) && 0xff)
+#endif
 
 namespace glib::process {
 
@@ -16,9 +23,9 @@ namespace glib::process {
         if (workDir.has_value()) {
             std::filesystem::current_path(workDir.value());
         }
-        std::ostringstream redirectedCommand;
-        redirectedCommand << command << " 2>&1";
-        FILE* file { popen(redirectedCommand.str().c_str(), "r") };
+        std::string redirectedCommand { command };
+        redirectedCommand += " 2>&1";
+        FILE* file { popen(redirectedCommand.c_str(), "r") };
         if (!file) {
             std::filesystem::current_path(originalDir);
             return false;
@@ -51,7 +58,7 @@ namespace glib::process {
         if (line != NULL) {
             free(line);
         }
-        const int closeCode = pclose(file);
+        const int closeCode { pclose(file) };
         std::filesystem::current_path(originalDir);
         if (WIFEXITED(closeCode)) {
             if (exitCode != nullptr) {
