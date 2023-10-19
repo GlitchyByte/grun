@@ -9,7 +9,6 @@
 #ifdef _WIN32
 #define popen _popen
 #define pclose _pclose
-#define getline _getline
 #define WIFEXITED(x) (x != -1)
 #define WEXITSTATUS(x) ((x >> 8) && 0xff)
 #endif
