@@ -38,7 +38,7 @@ Then, on macOS or Linux:
 On Windows:
 
     cmake -DCMAKE_BUILD_TYPE=MinSizeRel -B build.cmake -S .
-    cmake --build build.cmake --config MinSizeRel
+    cmake --build build.cmake --config MinSizeRel --parallel
 
 ### Receive your tasty binary!
 
