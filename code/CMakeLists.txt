@@ -13,7 +13,7 @@ set(APP "grun")
 
 file(STRINGS "../version" APP_VERSION LIMIT_COUNT 1)
 project(${APP} VERSION "${APP_VERSION}")
-message(STATUS "Building: ${APP} v${APP_VERSION}")
+message(STATUS "Project: ${APP} v${APP_VERSION}")
 message(STATUS "Platform: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR}")
 
 # Set C++ standard and binary output dir.
