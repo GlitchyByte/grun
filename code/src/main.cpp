@@ -1,6 +1,7 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
+#include "glib.h"
 #include "App.h"
 
 int main(const int argc, const char* argv[]) {

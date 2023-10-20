@@ -6,9 +6,11 @@
 #include "glib.h"
 #ifdef GLIB_PROCESS
 
+#include <string>
+#include <string_view>
 #include <optional>
-#include <functional>
 #include <filesystem>
+#include <functional>
 #include <deque>
 
 namespace glib::process {
@@ -30,7 +32,7 @@ namespace glib::process {
      */
     bool execute(const std::string_view& command, const std::optional<std::filesystem::path>& workDir = std::nullopt,
             std::deque<std::string>* lines = nullptr, int* exitCode = nullptr,
-            const std::function<bool(const std::string_view&)>& filter = nullptr);
+            const std::function<bool(const std::string&)>& filter = nullptr);
 }
 
 #endif // GLIB_PROCESS

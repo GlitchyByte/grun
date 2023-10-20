@@ -15,9 +15,27 @@
 
 namespace glib::process {
 
+    bool readLine(FILE* file, std::string& line) {
+        #ifdef _WIN32
+        const size_t eolSize = 2;
+        #else
+        const size_t eolSize = 1;
+        #endif
+        char buffer[1024];
+        line.clear();
+        while (fgets(buffer, sizeof(buffer), file) != NULL) {
+            line += buffer;
+            if (line.ends_with('\n')) {
+                line = line.substr(0, line.length() - eolSize);
+                return true;
+            }
+        }
+        return false;
+    }
+
     bool execute(const std::string_view& command, const std::optional<std::filesystem::path>& workDir,
             std::deque<std::string>* lines, int* exitCode,
-            const std::function<bool(const std::string_view&)>& filter) {
+            const std::function<bool(const std::string&)>& filter) {
         const auto& originalDir { std::filesystem::current_path() };
         if (workDir.has_value()) {
             std::filesystem::current_path(workDir.value());
@@ -29,33 +47,16 @@ namespace glib::process {
             std::filesystem::current_path(originalDir);
             return false;
         }
-        char* line { NULL };
-        size_t lineLen { 0 };
-        std::string_view lineView;
-        do {
-            lineLen = getline(&line, &lineLen, file);
-            if ((lineLen == -1) || ((lines == nullptr) && (filter == nullptr))) {
+        std::string line;
+        while (readLine(file, line)) {
+            if ((lines == nullptr) && (filter == nullptr)) {
                 continue;
             }
-            if (lineLen == 0) {
-                lineView = "";
-            } else if (line[lineLen - 1] == '\n') {
-                #ifdef _WIN32
-                lineView = std::string_view { line, lineLen - 2 };
-                #else
-                lineView = std::string_view { line, lineLen - 1 };
-                #endif
-            } else {
-                lineView = std::string_view { line, lineLen };
-            }
-            if ((filter == nullptr) || filter(lineView)) {
+            if ((filter == nullptr) || filter(line)) {
                 if (lines != nullptr) {
-                    lines->emplace_back(lineView);
+                    lines->emplace_back(std::move(line));
                 }
             }
-        } while (lineLen != -1);
-        if (line != NULL) {
-            free(line);
         }
         const int closeCode { pclose(file) };
         std::filesystem::current_path(originalDir);

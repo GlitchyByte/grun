@@ -3,10 +3,8 @@
 
 #pragma once
 
-#include <map>
-#include <filesystem>
-#include "glib.h"
-#include "GradleParams.h"
+#include <vector>
+#include <string_view>
 
 class App {
 public:

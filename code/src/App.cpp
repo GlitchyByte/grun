@@ -1,8 +1,12 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
+#include <map>
+#include <filesystem>
 #include <iostream>
 #include <regex>
+#include "glib.h"
+#include "GradleParams.h"
 #include "App.h"
 
 const glib::console::color_t textColor { glib::console::rgb(1, 1, 1) };
@@ -45,9 +49,8 @@ std::map<std::string, std::string> buildAndRetrieveGradleProperties(const Gradle
     const std::regex re { "^([a-zA-Z]+): ([^ ].*)$" };
     std::smatch match;
     glib::process::execute(command, gradleParams.getGradleRoot(), nullptr, &exitCode,
-            [&](const std::string_view& line) {
-                const std::string str { line };
-                if (!std::regex_match(str, match, re) || (match.size() != 3)) {
+            [&](const std::string& line) {
+                if (!std::regex_match(line, match, re) || (match.size() != 3)) {
                     return false;
                 }
                 const std::string key { match[1] };
