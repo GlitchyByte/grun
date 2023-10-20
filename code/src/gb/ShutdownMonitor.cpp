@@ -1,12 +1,12 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include "glib/ShutdownMonitor.h"
-#ifdef GLIB_SHUTDOWN_MONITOR
+#include "gb/ShutdownMonitor.h"
+#ifdef GB_SHUTDOWN_MONITOR
 
 #include <csignal>
 
-namespace glib {
+namespace gb {
 
     constinit bool _false { false };
     std::atomic<bool> generalShutdownInitiated { false };
@@ -75,4 +75,4 @@ namespace glib {
     }
 }
 
-#endif // GLIB_SHUTDOWN_MONITOR
+#endif // GB_SHUTDOWN_MONITOR

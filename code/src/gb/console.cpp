@@ -1,14 +1,14 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include "glib/console.h"
-#ifdef GLIB_CONSOLE
+#include "gb/console.h"
+#ifdef GB_CONSOLE
 
 #include <cassert>
 #include <sstream>
-#include "glib/strings.h"
+#include "gb/strings.h"
 
-namespace glib::console {
+namespace gb::console {
 
     color_t rgb(const color_t r, const color_t g, const color_t b) noexcept {
         assert(r < 6);
@@ -26,11 +26,11 @@ namespace glib::console {
         if (str.empty()) {
             return "";
         }
-        const auto startColor { glib::strings::replace(CSI_COLOR_FOREGROUND, CODE, std::to_string(color)) };
+        const auto startColor { gb::strings::replace(CSI_COLOR_FOREGROUND, CODE, std::to_string(color)) };
         std::ostringstream ss;
         ss << startColor << str << CSI_COLOR_RESET;
         return ss.str();
     }
 }
 
-#endif // GLIB_CONSOLE
+#endif // GB_CONSOLE

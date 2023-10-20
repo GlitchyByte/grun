@@ -3,12 +3,12 @@
 
 #pragma once
 
-#include "glib.h"
-#ifdef GLIB_CONSOLE
+#include "gb.h"
+#ifdef GB_CONSOLE
 
 #include <string>
 
-namespace glib::console {
+namespace gb::console {
 
     typedef uint32_t color_t;
 
@@ -48,4 +48,4 @@ namespace glib::console {
     std::string colorText(const std::string_view& str, const color_t color) noexcept;
 }
 
-#endif // GLIB_CONSOLE
+#endif // GB_CONSOLE

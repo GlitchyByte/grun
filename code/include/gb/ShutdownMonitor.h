@@ -3,14 +3,15 @@
 
 #pragma once
 
-#include "glib.h"
-#ifdef GLIB_SHUTDOWN_MONITOR
+#include "gb.h"
+#ifdef GB_SHUTDOWN_MONITOR
 
 #include <atomic>
 #include <mutex>
 #include <chrono>
+#include <functional>
 
-namespace glib {
+namespace gb {
 
     /**
      * Utility to monitor SIGINT and SIGTERM for proper application shutdown.
@@ -73,4 +74,4 @@ namespace glib {
     };
 }
 
-#endif // GLIB_SHUTDOWN_MONITOR
+#endif // GB_SHUTDOWN_MONITOR

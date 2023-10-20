@@ -1,13 +1,13 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include "glib/strings.h"
-#ifdef GLIB_STRINGS
+#include "gb/strings.h"
+#ifdef GB_STRINGS
 
-namespace glib::strings {
+namespace gb::strings {
 
     std::vector<std::string_view> createVectorStringViewFromCArray(const int argc, const char* argv[]) noexcept {
-        const size_t argsSize = argc;
+        const size_t argsSize { static_cast<size_t>(argc) };
         std::vector<std::string_view> args { argsSize };
         for (size_t i = 0; i < argsSize; ++i) {
             args[i] = std::string_view { argv[i] };
@@ -16,7 +16,7 @@ namespace glib::strings {
     }
 
     std::vector<std::string> createVectorStringFromCArray(const int argc, const char* argv[]) noexcept {
-        const size_t argsSize = argc;
+        const size_t argsSize { static_cast<size_t>(argc) };
         std::vector<std::string> args { argsSize };
         for (size_t i = 0; i < argsSize; ++i) {
             args[i] = std::string { argv[i] };
@@ -25,7 +25,7 @@ namespace glib::strings {
     }
 
     std::string replace(const std::string_view& str, const std::string_view& token, const std::string_view& value) noexcept {
-        size_t pos = str.find(token);
+        size_t pos = { str.find(token) };
         if (pos == std::string::npos) {
             return "";
         }
@@ -35,7 +35,7 @@ namespace glib::strings {
 
     std::vector<std::string_view> splitWeak(const std::string_view& str, const std::string_view& delimiter) noexcept {
         const size_t delimiterSize { delimiter.size() };
-        size_t pos = str.find(delimiter);
+        size_t pos { str.find(delimiter) };
         if ((delimiterSize == 0) || (pos == std::string::npos)) {
             return std::vector<std::string_view> { std::string { str } };
         }
@@ -51,8 +51,8 @@ namespace glib::strings {
     }
 
     std::vector<std::string> split(const std::string_view& str, const std::string_view& delimiter) noexcept {
-        const std::vector<std::string_view> weak { splitWeak(str, delimiter) };
-        const size_t weakSize = weak.size();
+        const std::vector<std::string_view> weak { std::move(splitWeak(str, delimiter)) };
+        const size_t weakSize { weak.size() };
         std::vector<std::string> lines { weakSize };
         for (size_t i = 0; i < weakSize; ++i) {
             lines[i] = weak[i];
@@ -64,7 +64,7 @@ namespace glib::strings {
         if (str.empty()) {
             return "";
         }
-        auto lines = splitWeak(str, "\n");
+        auto lines { std::move(splitWeak(str, "\n")) };
         if (lines.size() == 1) {
             return std::string { str };
         }
@@ -111,7 +111,7 @@ namespace glib::strings {
             indent = 0;
         }
         std::ostringstream ss;
-        bool first = true;
+        bool first { true };
         for (const auto& line: lines) {
             if (first) {
                 first = false;
@@ -131,10 +131,10 @@ namespace glib::strings {
     }
 
     std::string& insertThousandSeparatorsInPlace(std::string& str) noexcept {
-        const size_t period = str.find('.');
-        const size_t start = period == std::string::npos ? str.length() : period;
-        const size_t finish = str.starts_with('-') ? 4 : 3;
-        size_t index = start;
+        const size_t period { str.find('.') };
+        const size_t start { period == std::string::npos ? str.length() : period };
+        const size_t finish { static_cast<size_t>(str.starts_with('-') ? 4 : 3) };
+        size_t index { start };
         while (index > finish) {
             index -= 3;
             str.insert(index, ",");
@@ -147,7 +147,7 @@ namespace glib::strings {
         return insertThousandSeparatorsInPlace(newStr);
     }
 
-    constinit int DefaultPrecision = -1;
+    constinit int DefaultPrecision { -1 };
 }
 
-#endif // GLIB_STRINGS
+#endif // GB_STRINGS

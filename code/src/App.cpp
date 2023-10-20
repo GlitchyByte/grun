@@ -5,17 +5,17 @@
 #include <filesystem>
 #include <iostream>
 #include <regex>
-#include "glib.h"
+#include "gb.h"
 #include "GradleParams.h"
 #include "App.h"
 
-const glib::console::color_t textColor { glib::console::rgb(1, 1, 1) };
-const glib::console::color_t highlightColor { glib::console::rgb(5, 5, 5) };
-const glib::console::color_t cmdColor { glib::console::rgb(3, 5, 3) };
-const glib::console::color_t argColor { glib::console::rgb(0, 2, 0) };
+const gb::console::color_t textColor { gb::console::rgb(1, 1, 1) };
+const gb::console::color_t highlightColor { gb::console::rgb(5, 5, 5) };
+const gb::console::color_t cmdColor { gb::console::rgb(3, 5, 3) };
+const gb::console::color_t argColor { gb::console::rgb(0, 2, 0) };
 
 void printUsage() noexcept {
-    const std::string text = glib::strings::unindent(R"===(
+    const std::string text { gb::strings::unindent(R"===(
         Run a Gradle project.
         Usage:
           ${app} <${param1}> <${param2}> [${args}]
@@ -23,13 +23,13 @@ void printUsage() noexcept {
           ${param1} Directory of your main project Gradle root (e.g., "~/my/app/here" or ".")
           ${param2}             Project name (e.g., "myapp")
           ${args}            Arguments for the running project.
-        )===");
-    const std::string usage = glib::ReplaceableVars()
-            .add("app", glib::console::colorText("grun", cmdColor))
-            .add("param1", glib::console::colorText("project_gradle_root", argColor))
-            .add("param2", glib::console::colorText("project", argColor))
-            .add("args", glib::console::colorText("args ...", argColor))
-            .replace(text);
+        )===") };
+    const std::string usage { gb::ReplaceableVars()
+            .add("app", gb::console::colorText("grun", cmdColor))
+            .add("param1", gb::console::colorText("project_gradle_root", argColor))
+            .add("param2", gb::console::colorText("project", argColor))
+            .add("args", gb::console::colorText("args ...", argColor))
+            .replace(text) };
     std::cout << usage;
 }
 
@@ -39,7 +39,7 @@ std::map<std::string, std::string> buildAndRetrieveGradleProperties(const Gradle
 #else
     const std::string gradleCommand { "./gradlew" };
 #endif
-    const std::string command { glib::ReplaceableVars()
+    const std::string command { gb::ReplaceableVars()
             .add("gradle", gradleCommand)
             .add("project", gradleParams.getGradleProject())
             .replace("${gradle} ${project}:build ${project}:properties")
@@ -48,7 +48,7 @@ std::map<std::string, std::string> buildAndRetrieveGradleProperties(const Gradle
     int exitCode;
     const std::regex re { "^([a-zA-Z]+): ([^ ].*)$" };
     std::smatch match;
-    glib::process::execute(command, gradleParams.getGradleRoot(), nullptr, &exitCode,
+    gb::process::execute(command, gradleParams.getGradleRoot(), nullptr, &exitCode,
             [&](const std::string& line) {
                 if (!std::regex_match(line, match, re) || (match.size() != 3)) {
                     return false;
@@ -66,9 +66,9 @@ std::map<std::string, std::string> buildAndRetrieveGradleProperties(const Gradle
 
 void printMessage(const std::string_view& msg, const std::string_view& param) noexcept {
     const size_t pos = msg.find('@');
-    std::cerr << glib::console::colorText(msg.substr(0, pos), textColor)
-            << glib::console::colorText(param, highlightColor)
-            << glib::console::colorText(msg.substr(pos +1), textColor)
+    std::cerr << gb::console::colorText(msg.substr(0, pos), textColor)
+            << gb::console::colorText(param, highlightColor)
+            << gb::console::colorText(msg.substr(pos +1), textColor)
             << std::endl;
 }
 
@@ -105,7 +105,7 @@ int extractBin(const GradleParams& gradleParams, std::filesystem::path* binPath)
     // Untar.
     std::filesystem::path workDir { distDir / tarName.substr(0, tarName.length() - 4) };
     std::filesystem::remove_all(workDir);
-    if (!glib::process::execute("tar -xf " + tarName, distDir)) {
+    if (!gb::process::execute("tar -xf " + tarName, distDir)) {
         printMessage("Can't untar: @", tarPath.string());
         return 3;
     }
@@ -124,10 +124,10 @@ int App::run(const std::vector<std::string_view>& args) noexcept {
     if (result != 0) {
         return result;
     }
-    const std::string command { binPath.string() + ' ' + glib::strings::fromVector(gradleParams.getProjectArgs(), " ") };
+    const std::string command { binPath.string() + ' ' + gb::strings::fromVector(gradleParams.getProjectArgs(), " ") };
     result = std::system(command.c_str());
-    std::cout << glib::console::colorText("Exit code: ", textColor)
-            << glib::console::colorText(std::to_string(result), highlightColor)
+    std::cout << gb::console::colorText("Exit code: ", textColor)
+            << gb::console::colorText(std::to_string(result), highlightColor)
             << std::endl;
     return 0;
 }

@@ -3,12 +3,12 @@
 
 #pragma once
 
-#include "glib.h"
-#ifdef GLIB_REPLACEABLE_VARS
+#include "gb.h"
+#ifdef GB_REPLACEABLE_VARS
 
 #include <map>
 
-namespace glib {
+namespace gb {
 
     /**
      * Class to hold variable names and their values for string replacement.
@@ -56,4 +56,4 @@ namespace glib {
     };
 }
 
-#endif // GLIB_REPLACEABLE_VARS
+#endif // GB_REPLACEABLE_VARS

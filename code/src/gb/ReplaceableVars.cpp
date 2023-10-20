@@ -1,12 +1,12 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include "glib/ReplaceableVars.h"
-#ifdef GLIB_REPLACEABLE_VARS
+#include "gb/ReplaceableVars.h"
+#ifdef GB_REPLACEABLE_VARS
 
 #include <sstream>
 
-namespace glib {
+namespace gb {
 
     ReplaceableVars::ReplaceableVars(const ReplaceableVars& other) noexcept {
         vars = other.vars;
@@ -67,4 +67,4 @@ namespace glib {
     }
 }
 
-#endif // GLIB_REPLACEABLE_VARS
+#endif // GB_REPLACEABLE_VARS

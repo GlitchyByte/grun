@@ -1,10 +1,12 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include "glib/files.h"
-#ifdef GLIB_FILES
+#include "gb/files.h"
+#ifdef GB_FILES
 
-namespace glib::files {
+#include <string>
+
+namespace gb::files {
 
     std::filesystem::path canonicalPath(const std::filesystem::path& path) noexcept {
         std::string pathStr { path.string() };
@@ -17,4 +19,4 @@ namespace glib::files {
     }
 }
 
-#endif
+#endif // GB_FILES

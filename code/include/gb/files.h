@@ -3,12 +3,12 @@
 
 #pragma once
 
-#include "glib.h"
-#ifdef GLIB_FILES
+#include "gb.h"
+#ifdef GB_FILES
 
 #include <filesystem>
 
-namespace glib::files {
+namespace gb::files {
 
     /**
      * Expands user home directory if path starts with '~', and normalizes path.
@@ -20,4 +20,4 @@ namespace glib::files {
     std::filesystem::path canonicalPath(const std::filesystem::path& path) noexcept;
 }
 
-#endif
+#endif // GB_FILES

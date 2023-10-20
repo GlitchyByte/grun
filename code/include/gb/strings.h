@@ -3,14 +3,16 @@
 
 #pragma once
 
-#include "glib.h"
-#ifdef GLIB_STRINGS
+#include "gb.h"
+#ifdef GB_STRINGS
 
 #include <vector>
+#include <string>
+#include <string_view>
 #include <sstream>
 #include <iomanip>
 
-namespace glib::strings {
+namespace gb::strings {
 
     /**
      * Converts a C string array into a vector of string_views.
@@ -147,7 +149,7 @@ namespace glib::strings {
 }
 
 // ----------------================ Templates ================----------------
-namespace glib::strings {
+namespace gb::strings {
 
     template<typename T>
     std::string fromVector(const std::vector<T>& vector, const std::string_view& separator) noexcept {
@@ -184,4 +186,4 @@ namespace glib::strings {
     }
 }
 
-#endif // GLIB_STRINGS
+#endif // GB_STRINGS

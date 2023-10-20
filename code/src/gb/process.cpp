@@ -1,8 +1,8 @@
 // Copyright 2023 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include "glib/process.h"
-#ifdef GLIB_PROCESS
+#include "gb/process.h"
+#ifdef GB_PROCESS
 
 #include <cstdio>
 
@@ -13,7 +13,7 @@
 #define WEXITSTATUS(x) ((x >> 8) && 0xff)
 #endif
 
-namespace glib::process {
+namespace gb::process {
 
     bool readLine(FILE* file, std::string& line) {
         #ifdef _WIN32
@@ -70,4 +70,4 @@ namespace glib::process {
     }
 }
 
-#endif // GLIB_PROCESS
+#endif // GB_PROCESS

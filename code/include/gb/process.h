@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "glib.h"
-#ifdef GLIB_PROCESS
+#include "gb.h"
+#ifdef GB_PROCESS
 
 #include <string>
 #include <string_view>
@@ -13,7 +13,7 @@
 #include <functional>
 #include <deque>
 
-namespace glib::process {
+namespace gb::process {
 
     /**
      * Executes a command and optionally captures it's output.
@@ -35,4 +35,4 @@ namespace glib::process {
             const std::function<bool(const std::string&)>& filter = nullptr);
 }
 
-#endif // GLIB_PROCESS
+#endif // GB_PROCESS

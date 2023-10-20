@@ -52,7 +52,7 @@ std::string GradleParams::string() const noexcept {
     std::ostringstream ss;
     ss << "{ gradleRoot: " << gradleRoot
         << ", gradleProject: " << gradleProject
-        << ", projectArgs: " << glib::strings::fromVector(projectArgs)
+        << ", projectArgs: " << gb::strings::fromVector(projectArgs)
         << " }";
     return ss.str();
 }
