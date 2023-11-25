@@ -26,7 +26,7 @@ namespace gb::console {
      * @return The color code.
      */
     [[nodiscard]]
-    extern color_t rgb(const color_t r, const color_t g, const color_t b) noexcept;
+    extern color_t rgb(color_t const r, color_t const g, color_t const b) noexcept;
 
     /**
      * Converts a grey step into a color code.
@@ -35,7 +35,7 @@ namespace gb::console {
      * @return The color code.
      */
     [[nodiscard]]
-    extern color_t grey(const color_t step) noexcept;
+    extern color_t grey(color_t const step) noexcept;
 
     /**
      * Returns a string that represents the given string in the given color.
@@ -45,7 +45,7 @@ namespace gb::console {
      * @return The string in color.
      */
     [[nodiscard]]
-    std::string colorText(const std::string_view& str, const color_t color) noexcept;
+    std::string colorText(std::string_view const& str, color_t const color) noexcept;
 }
 
 #endif // GB_CONSOLE

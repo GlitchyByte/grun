@@ -8,9 +8,9 @@
 
 namespace gb::files {
 
-    std::filesystem::path canonicalPath(const std::filesystem::path& path) noexcept {
+    std::filesystem::path canonicalPath(std::filesystem::path const& path) noexcept {
         std::string pathStr { path.string() };
-        const std::string fullPath {
+        std::string const fullPath {
             pathStr.starts_with('~') ?
                 std::getenv("HOME") + pathStr.substr(1) :
                 std::move(pathStr)

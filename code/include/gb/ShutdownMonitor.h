@@ -46,7 +46,7 @@ namespace gb {
          *
          * @param timeout Time to wait for shutdown.
          */
-        void awaitShutdown(const std::chrono::milliseconds& timeout) noexcept;
+        void awaitShutdown(std::chrono::milliseconds const& timeout) noexcept;
 
         /**
          * Awaits for a shutdown.
@@ -62,7 +62,7 @@ namespace gb {
          * @param cadence Cadence at which to execute the action.
          * @param action Action to execute.
          */
-        void whileLive(const std::chrono::milliseconds& cadence, const std::function<void()>& action);
+        void whileLive(std::chrono::milliseconds const& cadence, std::function<void()> const& action);
 
 
     private:
@@ -70,7 +70,7 @@ namespace gb {
         std::mutex shutdownLock;
         std::condition_variable shuttingDown;
 
-        explicit ShutdownMonitor(const bool shuttingDown) noexcept : isShuttingDown(shuttingDown) {}
+        explicit ShutdownMonitor(bool const shuttingDown) noexcept : isShuttingDown(shuttingDown) {}
     };
 }
 

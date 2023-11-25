@@ -4,7 +4,7 @@
 #include "gb.h"
 #include "App.h"
 
-int main(const int argc, const char* argv[]) {
-    const auto& args = gb::strings::createVectorStringViewFromCArray(argc, argv);
+int main(int const argc, char const* argv[]) {
+    auto const& args = gb::strings::createVectorStringViewFromCArray(argc, argv);
     return App::run(args);
 }

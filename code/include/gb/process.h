@@ -30,9 +30,9 @@ namespace gb::process {
      *              filter must return true to add the line to lines, false to skip.
      * @return True if command execution was successful.
      */
-    bool execute(const std::string_view& command, const std::optional<std::filesystem::path>& workDir = std::nullopt,
+    bool execute(std::string_view const& command, std::optional<std::filesystem::path>const& workDir = std::nullopt,
             std::deque<std::string>* lines = nullptr, int* exitCode = nullptr,
-            const std::function<bool(const std::string&)>& filter = nullptr);
+            std::function<bool(std::string const&)>const& filter = nullptr);
 }
 
 #endif // GB_PROCESS

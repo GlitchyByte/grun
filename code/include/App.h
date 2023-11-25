@@ -8,5 +8,5 @@
 
 class App {
 public:
-    static int run(const std::vector<std::string_view>& args) noexcept;
+    static int run(std::vector<std::string_view> const& args) noexcept;
 };

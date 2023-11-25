@@ -8,7 +8,7 @@
 
 class GradleParams {
 public:
-    explicit GradleParams(const std::vector<std::string_view>& args) noexcept;
+    explicit GradleParams(std::vector<std::string_view> const& args) noexcept;
 
     [[nodiscard]]
     std::filesystem::path getGradleRoot() const noexcept;

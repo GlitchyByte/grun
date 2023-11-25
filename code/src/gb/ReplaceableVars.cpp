@@ -8,7 +8,7 @@
 
 namespace gb {
 
-    ReplaceableVars::ReplaceableVars(const ReplaceableVars& other) noexcept {
+    ReplaceableVars::ReplaceableVars(ReplaceableVars const& other) noexcept {
         vars = other.vars;
     }
 
@@ -16,7 +16,7 @@ namespace gb {
         vars = std::move(other.vars);
     }
 
-    ReplaceableVars& ReplaceableVars::operator=(const ReplaceableVars& other) noexcept {
+    ReplaceableVars& ReplaceableVars::operator=(ReplaceableVars const& other) noexcept {
         if (this != &other) {
             vars = other.vars;
         }
@@ -30,17 +30,17 @@ namespace gb {
         return *this;
     }
 
-    ReplaceableVars& ReplaceableVars::add(const std::string& name, const std::string& value) noexcept {
-        const std::string decoratedName = "${" + name + "}";
+    ReplaceableVars& ReplaceableVars::add(std::string const& name, std::string const& value) noexcept {
+        std::string const decoratedName = "${" + name + "}";
         vars[decoratedName] = value;
         return *this;
     }
 
-    std::string ReplaceableVars::replace(const std::string_view& str) const noexcept {
+    std::string ReplaceableVars::replace(std::string_view const& str) const noexcept {
         std::string replaced { str };
-        for (const auto& entries: vars) {
-            const std::string& name { entries.first };
-            const std::string& value { entries.second };
+        for (auto const& entries: vars) {
+            std::string const& name { entries.first };
+            std::string const& value { entries.second };
             size_t pos { replaced.find(name) };
             while (pos != std::string::npos) {
                 replaced.replace(pos, name.length(), value);
@@ -54,7 +54,7 @@ namespace gb {
         std::ostringstream ss;
         ss << "{ ";
         bool first = true;
-        for (const auto& entries: vars) {
+        for (auto const& entries: vars) {
             if (first) {
                 first = false;
             } else {

@@ -13,12 +13,12 @@ namespace gb {
     std::mutex generalShutdownLock;
     std::vector<std::shared_ptr<ShutdownMonitor>> shutdownMonitors;
 
-    void triggerShutdown([[maybe_unused]] const int signal) noexcept {
+    void triggerShutdown([[maybe_unused]] int const signal) noexcept {
         if (!generalShutdownInitiated.compare_exchange_strong(_false, true)) {
             return;
         }
         std::lock_guard<std::mutex> lock { generalShutdownLock };
-        for (const auto& monitor: shutdownMonitors) {
+        for (auto const& monitor: shutdownMonitors) {
             monitor->shutdown();
         }
         shutdownMonitors.clear();
@@ -32,8 +32,8 @@ namespace gb {
             initialized = true;
         }
         std::lock_guard<std::mutex> lock { generalShutdownLock };
-        const bool isShuttingDown { generalShutdownInitiated };
-        const std::shared_ptr<ShutdownMonitor> monitor { new ShutdownMonitor(isShuttingDown) };
+        bool const isShuttingDown { generalShutdownInitiated };
+        std::shared_ptr<ShutdownMonitor> const monitor { new ShutdownMonitor(isShuttingDown) };
         if (!isShuttingDown) {
             shutdownMonitors.push_back(monitor);
         }
@@ -50,7 +50,7 @@ namespace gb {
         shuttingDown.notify_all();
     }
 
-    void ShutdownMonitor::awaitShutdown(const std::chrono::milliseconds& timeout) noexcept {
+    void ShutdownMonitor::awaitShutdown(std::chrono::milliseconds const& timeout) noexcept {
         if (shouldShutdown()) {
             return;
         }
@@ -67,7 +67,7 @@ namespace gb {
         shuttingDown.wait(lock, [&] { return isShuttingDown.load(); });
     }
 
-    void ShutdownMonitor::whileLive(const std::chrono::milliseconds& cadence, const std::function<void()>& action) {
+    void ShutdownMonitor::whileLive(std::chrono::milliseconds const& cadence, std::function<void()> const& action) {
         while (!shouldShutdown()) {
             action();
             awaitShutdown(cadence);

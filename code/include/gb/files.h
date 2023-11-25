@@ -17,7 +17,7 @@ namespace gb::files {
      * @return Canonical path.
      */
     [[nodiscard]]
-    std::filesystem::path canonicalPath(const std::filesystem::path& path) noexcept;
+    std::filesystem::path canonicalPath(std::filesystem::path const& path) noexcept;
 }
 
 #endif // GB_FILES

@@ -17,11 +17,11 @@ namespace gb {
     public:
         ReplaceableVars() noexcept = default;
 
-        ReplaceableVars(const ReplaceableVars& other) noexcept;
+        ReplaceableVars(ReplaceableVars const& other) noexcept;
 
         ReplaceableVars(ReplaceableVars&& other) noexcept;
 
-        ReplaceableVars& operator=(const ReplaceableVars& other) noexcept;
+        ReplaceableVars& operator=(ReplaceableVars const& other) noexcept;
 
         ReplaceableVars& operator=(ReplaceableVars&& other) noexcept;
 
@@ -32,7 +32,7 @@ namespace gb {
          * @param value Value.
          * @return This object.
          */
-        ReplaceableVars& add(const std::string& name, const std::string& value) noexcept;
+        ReplaceableVars& add(std::string const& name, std::string const& value) noexcept;
 
         /**
          * Replace inline variables with values.
@@ -41,7 +41,7 @@ namespace gb {
          * @return The replaced string.
          */
         [[nodiscard]]
-        std::string replace(const std::string_view& str) const noexcept;
+        std::string replace(std::string_view const& str) const noexcept;
 
         /**
          * String representation.

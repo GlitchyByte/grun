@@ -6,8 +6,8 @@
 
 namespace gb::strings {
 
-    std::vector<std::string_view> createVectorStringViewFromCArray(const int argc, const char* argv[]) noexcept {
-        const size_t argsSize { static_cast<size_t>(argc) };
+    std::vector<std::string_view> createVectorStringViewFromCArray(int const argc, char const* argv[]) noexcept {
+        size_t const argsSize { static_cast<size_t>(argc) };
         std::vector<std::string_view> args { argsSize };
         for (size_t i = 0; i < argsSize; ++i) {
             args[i] = std::string_view { argv[i] };
@@ -15,8 +15,8 @@ namespace gb::strings {
         return args;
     }
 
-    std::vector<std::string> createVectorStringFromCArray(const int argc, const char* argv[]) noexcept {
-        const size_t argsSize { static_cast<size_t>(argc) };
+    std::vector<std::string> createVectorStringFromCArray(int const argc, char const* argv[]) noexcept {
+        size_t const argsSize { static_cast<size_t>(argc) };
         std::vector<std::string> args { argsSize };
         for (size_t i = 0; i < argsSize; ++i) {
             args[i] = std::string { argv[i] };
@@ -24,7 +24,7 @@ namespace gb::strings {
         return args;
     }
 
-    std::string replace(const std::string_view& str, const std::string_view& token, const std::string_view& value) noexcept {
+    std::string replace(std::string_view const& str, std::string_view const& token, std::string_view const& value) noexcept {
         size_t pos = { str.find(token) };
         if (pos == std::string::npos) {
             return "";
@@ -33,8 +33,8 @@ namespace gb::strings {
         return newStr.replace(pos, token.length(), value);
     }
 
-    std::vector<std::string_view> splitWeak(const std::string_view& str, const std::string_view& delimiter) noexcept {
-        const size_t delimiterSize { delimiter.size() };
+    std::vector<std::string_view> splitWeak(std::string_view const& str, std::string_view const& delimiter) noexcept {
+        size_t const delimiterSize { delimiter.size() };
         size_t pos { str.find(delimiter) };
         if ((delimiterSize == 0) || (pos == std::string::npos)) {
             return std::vector<std::string_view> { std::string { str } };
@@ -50,9 +50,9 @@ namespace gb::strings {
         return lines;
     }
 
-    std::vector<std::string> split(const std::string_view& str, const std::string_view& delimiter) noexcept {
-        const std::vector<std::string_view> weak { std::move(splitWeak(str, delimiter)) };
-        const size_t weakSize { weak.size() };
+    std::vector<std::string> split(std::string_view const& str, std::string_view const& delimiter) noexcept {
+        std::vector<std::string_view> const weak { std::move(splitWeak(str, delimiter)) };
+        size_t const weakSize { weak.size() };
         std::vector<std::string> lines { weakSize };
         for (size_t i = 0; i < weakSize; ++i) {
             lines[i] = weak[i];
@@ -60,7 +60,7 @@ namespace gb::strings {
         return lines;
     }
 
-    std::string unindent(const std::string_view& str) noexcept {
+    std::string unindent(std::string_view const& str) noexcept {
         if (str.empty()) {
             return "";
         }
@@ -79,7 +79,7 @@ namespace gb::strings {
         while (!foundDifference) {
             char ch;
             for (size_t index = 0; index < lines.size(); ++index) {
-                const auto& line { lines[index] };
+                auto const& line { lines[index] };
                 if (line.empty()) {
                     continue;
                 }
@@ -112,7 +112,7 @@ namespace gb::strings {
         }
         std::ostringstream ss;
         bool first { true };
-        for (const auto& line: lines) {
+        for (auto const& line: lines) {
             if (first) {
                 first = false;
             } else {
@@ -131,9 +131,9 @@ namespace gb::strings {
     }
 
     std::string& insertThousandSeparatorsInPlace(std::string& str) noexcept {
-        const size_t period { str.find('.') };
-        const size_t start { period == std::string::npos ? str.length() : period };
-        const size_t finish { static_cast<size_t>(str.starts_with('-') ? 4 : 3) };
+        size_t const period { str.find('.') };
+        size_t const start { period == std::string::npos ? str.length() : period };
+        size_t const finish { static_cast<size_t>(str.starts_with('-') ? 4 : 3) };
         size_t index { start };
         while (index > finish) {
             index -= 3;
@@ -142,7 +142,7 @@ namespace gb::strings {
         return str;
     }
 
-    std::string insertThousandSeparators(const std::string_view& str) noexcept {
+    std::string insertThousandSeparators(std::string_view const& str) noexcept {
         std::string newStr { str };
         return insertThousandSeparatorsInPlace(newStr);
     }

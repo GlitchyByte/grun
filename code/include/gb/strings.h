@@ -26,7 +26,7 @@ namespace gb::strings {
      * @param argv Array of C strings.
      * @return A string vector of the arguments.
      */
-    std::vector<std::string_view> createVectorStringViewFromCArray(const int argc, const char* argv[]) noexcept;
+    std::vector<std::string_view> createVectorStringViewFromCArray(int const argc, char const* argv[]) noexcept;
 
     /**
      * Converts a C string array into a vector of strings.
@@ -38,7 +38,7 @@ namespace gb::strings {
      * @param argv Array of C strings.
      * @return A string vector of the arguments.
      */
-    std::vector<std::string> createVectorStringFromCArray(const int argc, const char* argv[]) noexcept;
+    std::vector<std::string> createVectorStringFromCArray(int const argc, char const* argv[]) noexcept;
 
     /**
      * Convenience replace of a token in a string.
@@ -51,7 +51,7 @@ namespace gb::strings {
      * @return The replaced string with the token replaced.
      */
     [[nodiscard]]
-    std::string replace(const std::string_view& str, const std::string_view& token, const std::string_view& value) noexcept;
+    std::string replace(std::string_view const& str, std::string_view const& token, std::string_view const& value) noexcept;
 
     /**
      * Splits a string by the delimiter into a vector of strings.
@@ -65,7 +65,7 @@ namespace gb::strings {
      * @return A vector of strings.
      */
     [[nodiscard]]
-    std::vector<std::string_view> splitWeak(const std::string_view& str, const std::string_view& delimiter) noexcept;
+    std::vector<std::string_view> splitWeak(std::string_view const& str, std::string_view const& delimiter) noexcept;
 
     /**
      * Splits a string by the delimiter into a vector of strings.
@@ -75,7 +75,7 @@ namespace gb::strings {
      * @return A vector of strings.
      */
     [[nodiscard]]
-    std::vector<std::string> split(const std::string_view& str, const std::string_view& delimiter) noexcept;
+    std::vector<std::string> split(std::string_view const& str, std::string_view const& delimiter) noexcept;
 
     /**
      * Unindents a multiline block of text by removing all common spaces or tabs
@@ -89,7 +89,7 @@ namespace gb::strings {
      * @return The unindented string.
      */
     [[nodiscard]]
-    std::string unindent(const std::string_view& str) noexcept;
+    std::string unindent(std::string_view const& str) noexcept;
 
     /**
      * Joins a string representation of all elements into a string.
@@ -101,7 +101,7 @@ namespace gb::strings {
      */
     template <typename T>
     [[nodiscard]]
-    std::string fromVector(const std::vector<T>& vector, const std::string_view& separator = ", ") noexcept;
+    std::string fromVector(std::vector<T> const& vector, std::string_view const& separator = ", ") noexcept;
 
     /**
      * Inserts thousand separator in the given string that must be a numeric representation.
@@ -119,7 +119,7 @@ namespace gb::strings {
      * @param str String numeric representation.
      * @return The numeric representation with thousand separators.
      */
-    std::string insertThousandSeparators(const std::string_view& str) noexcept;
+    std::string insertThousandSeparators(std::string_view const& str) noexcept;
 
     /**
      * Default precision for numeric values.
@@ -134,7 +134,7 @@ namespace gb::strings {
      * @return A human representation of value.
      */
     template <std::integral T>
-    std::string fromIntegral(const T value) noexcept;
+    std::string fromIntegral(T const value) noexcept;
 
     /**
      * Converts a floating point value to a human representation.
@@ -145,14 +145,14 @@ namespace gb::strings {
      * @return A human representation of value.
      */
     template <std::floating_point T>
-    std::string fromFloatingPoint(const T value, const int precision = DefaultPrecision) noexcept;
+    std::string fromFloatingPoint(T const value, int const precision = DefaultPrecision) noexcept;
 }
 
 // ----------------================ Templates ================----------------
 namespace gb::strings {
 
     template<typename T>
-    std::string fromVector(const std::vector<T>& vector, const std::string_view& separator) noexcept {
+    std::string fromVector(std::vector<T> const& vector, std::string_view const& separator) noexcept {
         std::ostringstream ss;
         bool first { true };
         for (const T& item: vector) {
@@ -167,13 +167,13 @@ namespace gb::strings {
     }
 
     template <std::integral T>
-    std::string fromIntegral(const T value) noexcept {
+    std::string fromIntegral(T const value) noexcept {
         std::string str { std::to_string(value) };
         return insertThousandSeparatorsInPlace(str);
     }
 
     template <std::floating_point T>
-    std::string fromFloatingPoint(const T value, const int precision) noexcept {
+    std::string fromFloatingPoint(T const value, int const precision) noexcept {
         std::string str;
         if (precision == DefaultPrecision) {
             str = std::to_string(value);

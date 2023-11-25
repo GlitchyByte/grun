@@ -17,9 +17,9 @@ namespace gb::process {
 
     bool readLine(FILE* file, std::string& line) {
         #ifdef _WIN32
-        const size_t eolSize = 2;
+        size_t const eolSize = 2;
         #else
-        const size_t eolSize = 1;
+        size_t const eolSize = 1;
         #endif
         char buffer[1024];
         line.clear();
@@ -33,10 +33,10 @@ namespace gb::process {
         return false;
     }
 
-    bool execute(const std::string_view& command, const std::optional<std::filesystem::path>& workDir,
+    bool execute(std::string_view const& command, std::optional<std::filesystem::path> const& workDir,
             std::deque<std::string>* lines, int* exitCode,
-            const std::function<bool(const std::string&)>& filter) {
-        const auto& originalDir { std::filesystem::current_path() };
+            std::function<bool(std::string const&)> const& filter) {
+        auto const& originalDir { std::filesystem::current_path() };
         if (workDir.has_value()) {
             std::filesystem::current_path(workDir.value());
         }
@@ -58,7 +58,7 @@ namespace gb::process {
                 }
             }
         }
-        const int closeCode { pclose(file) };
+        int const closeCode { pclose(file) };
         std::filesystem::current_path(originalDir);
         if (WIFEXITED(closeCode)) {
             if (exitCode != nullptr) {

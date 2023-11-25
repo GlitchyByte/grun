@@ -4,8 +4,8 @@
 #include <filesystem>
 #include "GradleParams.h"
 
-GradleParams::GradleParams(const std::vector<std::string_view>& args) noexcept {
-    const size_t size { args.size() };
+GradleParams::GradleParams(std::vector<std::string_view> const& args) noexcept {
+    size_t const size { args.size() };
     if (size < 3) {
         gradleRoot = std::filesystem::path {};
         gradleProject = std::string {};
@@ -14,10 +14,10 @@ GradleParams::GradleParams(const std::vector<std::string_view>& args) noexcept {
         return;
     }
     try {
-        const std::string rawRoot { args[1] };
-        const std::string param { rawRoot.starts_with('~') ? std::getenv("HOME") + rawRoot.substr(1) : rawRoot };
+        std::string const rawRoot { args[1] };
+        std::string const param { rawRoot.starts_with('~') ? std::getenv("HOME") + rawRoot.substr(1) : rawRoot };
         gradleRoot = std::filesystem::canonical(param);
-    } catch (const std::exception& e) {
+    } catch (std::exception const& e) {
         gradleRoot = std::filesystem::path {};
         gradleProject = std::string {};
         projectArgs = std::vector<std::string>(0);
