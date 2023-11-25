@@ -8,11 +8,11 @@
 set -u
 set -e
 # Capture caller directory and script directory.
-readonly calling_dir="$(pwd)"
+readonly calling_dir="${PWD}"
 readonly script_dir="$(cd "$(dirname "$0")" && pwd)"
 # Go to script directory and load utilities.
 cd "${script_dir}"
-. ./_gscript
+. ./_gcolors
 
 # [Main]
 
