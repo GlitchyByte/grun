@@ -1,12 +1,11 @@
-// Copyright 2023 GlitchyByte
+// Copyright 2023-2024 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
 #include "gb/process.h"
 #ifdef GB_PROCESS
 
 #include <cstdio>
-
-#ifdef _WIN32
+#ifdef GB_IS_WINDOWS
 #define popen _popen
 #define pclose _pclose
 #define WIFEXITED(x) (x != -1)
@@ -15,12 +14,13 @@
 
 namespace gb::process {
 
+#ifdef GB_IS_WINDOWS
+    constexpr size_t const eolSize = 2;
+#else
+    constexpr size_t const eolSize = 1;
+#endif
+
     bool readLine(FILE* file, std::string& line) {
-        #ifdef _WIN32
-        size_t const eolSize = 2;
-        #else
-        size_t const eolSize = 1;
-        #endif
         char buffer[1024];
         line.clear();
         while (fgets(buffer, sizeof(buffer), file) != NULL) {
@@ -33,12 +33,12 @@ namespace gb::process {
         return false;
     }
 
-    bool execute(std::string_view const& command, std::optional<std::filesystem::path> const& workDir,
+    bool execute(std::string_view const& command, std::filesystem::path const* workDir,
             std::deque<std::string>* lines, int* exitCode,
             std::function<bool(std::string const&)> const& filter) {
         auto const& originalDir { std::filesystem::current_path() };
-        if (workDir.has_value()) {
-            std::filesystem::current_path(workDir.value());
+        if (workDir != nullptr) {
+            std::filesystem::current_path(*workDir);
         }
         std::string redirectedCommand { command };
         redirectedCommand += " 2>&1";

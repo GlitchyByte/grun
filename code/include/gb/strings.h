@@ -1,4 +1,4 @@
-// Copyright 2023 GlitchyByte
+// Copyright 2023-2024 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
@@ -7,8 +7,6 @@
 #ifdef GB_STRINGS
 
 #include <vector>
-#include <string>
-#include <string_view>
 #include <sstream>
 #include <iomanip>
 
@@ -16,11 +14,10 @@ namespace gb::strings {
 
     /**
      * Converts a C string array into a vector of string_views.
-     *
-     * <p>The contents of the vector will be valid as long as the original array is valid.
-     *
-     * <p>This function is specifically designed to convert main function args
-     * into a string vector.
+     * <p>
+     * The contents of the vector will be valid as long as the original array is valid.
+     * <p>
+     * This function is specifically designed to convert main function args into a string vector.
      *
      * @param argc String array size.
      * @param argv Array of C strings.
@@ -30,9 +27,8 @@ namespace gb::strings {
 
     /**
      * Converts a C string array into a vector of strings.
-     *
-     * <p>This function is specifically designed to convert main function args
-     * into a string vector.
+     * <p>
+     * This function is specifically designed to convert main function args into a string vector.
      *
      * @param argc String array size.
      * @param argv Array of C strings.
@@ -42,8 +38,8 @@ namespace gb::strings {
 
     /**
      * Convenience replace of a token in a string.
-     *
-     * <p>This creates a new string, so it is only a shortcut, not efficient for replacing many tokens.
+     * <p>
+     * This creates a new string, so it is only a shortcut, not efficient for replacing many tokens.
      *
      * @param str String to search for token.
      * @param token Token to find.
@@ -55,8 +51,8 @@ namespace gb::strings {
 
     /**
      * Splits a string by the delimiter into a vector of strings.
-     *
-     * <p>Storage is weak. Meaning, the resulting vector is actually pointing at sections in the original string.
+     * <p>
+     * Storage is weak. Meaning, the resulting vector is actually pointing at sections in the original string.
      * This is faster than regular split, but if the original string goes away, the contents of this
      * vector are not valid.
      *
@@ -80,8 +76,8 @@ namespace gb::strings {
     /**
      * Unindents a multiline block of text by removing all common spaces or tabs
      * from the beginning of the lines. Empty lines are left alone.
-     *
-     * <p>This function is specifically designed to use with raw string literals.
+     * <p>
+     * This function is specifically designed to use with raw string literals.
      * And it will remove indentation created to align the string with the rest
      * of the surrounding code.
      *
@@ -104,27 +100,28 @@ namespace gb::strings {
     std::string fromVector(std::vector<T> const& vector, std::string_view const& separator = ", ") noexcept;
 
     /**
-     * Inserts thousand separator in the given string that must be a numeric representation.
-     *
-     * <p>Insertion happens in place. The return string is the same as the parameter string.
+     * Adds thousand separators in the given string that must be a numeric representation.
      *
      * @param str String numeric representation.
      * @return The numeric representation with thousand separators.
      */
-    std::string& insertThousandSeparatorsInPlace(std::string& str) noexcept;
+    [[nodiscard]]
+    std::string addThousandSeparators(std::string_view const& str) noexcept;
 
     /**
-     * Inserts thousand separator in the given string that must be a numeric representation.
+     * Returns a string representation of the given time.
      *
-     * @param str String numeric representation.
-     * @return The numeric representation with thousand separators.
+     * @param time Time to convert to string.
+     * @param format Time format.
+     * @return String representation of the given time.
      */
-    std::string insertThousandSeparators(std::string_view const& str) noexcept;
+    [[nodiscard]]
+    std::string fromTime(std::time_t const& time, std::string const& format) noexcept;
 
     /**
      * Default precision for numeric values.
      */
-    extern constinit int DefaultPrecision;
+    constexpr int DefaultPrecision { -1 };
 
     /**
      * Converts an integral value to a human representation.
@@ -168,8 +165,7 @@ namespace gb::strings {
 
     template <std::integral T>
     std::string fromIntegral(T const value) noexcept {
-        std::string str { std::to_string(value) };
-        return insertThousandSeparatorsInPlace(str);
+        return addThousandSeparators(std::to_string(value));
     }
 
     template <std::floating_point T>
@@ -182,7 +178,7 @@ namespace gb::strings {
             ss << std::fixed << std::setprecision(precision) << value;
             str = ss.str();
         }
-        return insertThousandSeparators(str);
+        return addThousandSeparators(str);
     }
 }
 

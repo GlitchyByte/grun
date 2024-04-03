@@ -1,4 +1,4 @@
-# Copyright 2023-2024 GlitchyByte
+# Copyright 2024 GlitchyByte
 # SPDX-License-Identifier: MIT-0
 
 cmake_minimum_required(VERSION 3.26)
@@ -13,9 +13,9 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 # Main binary to build.
-set(APP "grun")
+set(APP "gbtest")
 
-file(STRINGS "../version" APP_VERSION LIMIT_COUNT 1)
+file(STRINGS "../../version" APP_VERSION LIMIT_COUNT 1)
 project(${APP} VERSION "${APP_VERSION}")
 message(STATUS "Project: ${APP} v${APP_VERSION}")
 message(STATUS "Platform: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR}")
@@ -32,7 +32,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto -ffunction-sections -fdata-sections")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto -ffunction-sections -fdata-sections")
     elseif (${IS_WINDOWS})
-        # Windows.
+        # Windows has not been tested.
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GL")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /GL")
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
@@ -42,32 +42,45 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel
     endif ()
 endif ()
 
-# Add all cpp files in src dir.
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
-add_executable(${APP} ${SOURCES})
+# Test framework.
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/9d43b27f7a873596496a2ea70721b3f9eb82df01.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+#set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+enable_testing()
 
-#if (${IS_MACOS})
-#    target_link_libraries(${APP}
-#            PUBLIC "-framework CoreFoundation"
-#            PUBLIC "-framework CoreServices"
-#    )
-#endif ()
+# Add all cpp files in src dir.
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "../src/*.cpp")
+list(FILTER SOURCES EXCLUDE REGEX "/src/main.cpp$")
+file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "*.cc")
+add_executable(${APP} ${SOURCES} ${TEST_SOURCES})
+
+if (${IS_MACOS})
+    target_link_libraries(${APP}
+            PUBLIC "-framework CoreFoundation"
+            PUBLIC "-framework CoreServices"
+    )
+endif ()
 
 # Add all h files in include dir.
-target_include_directories(${APP} PRIVATE include)
+target_include_directories(${APP} PRIVATE "../include")
+
+# Add GoogleTest libraries.
+target_link_libraries(${APP} PUBLIC GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(${APP})
 
 # Minimize binary size.
 if ((CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel") AND
-        (CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
+(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
     # Strip all remaining symbols and relocation information.
     add_custom_command(
             TARGET ${APP}
             POST_BUILD
             COMMAND strip $<TARGET_FILE:${APP}>
     )
-endif ()
-
-# Add test project if CLion build for code insight.
-if (CLION_BUILD)
-    add_subdirectory(test)
 endif ()

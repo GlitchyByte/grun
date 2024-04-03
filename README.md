@@ -1,10 +1,9 @@
 # grun
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue)
+![Version](https://img.shields.io/badge/Version-1.1.0-blue)
 
-This is a Gradle project runner. It builds, unpacks, and runs a Gradle project on the current console.
+This is a Gradle project runner. It builds, unpacks, and runs a Gradle project on the current terminal.
 Also allows `SIGINT` (Ctrl+C) to be captured by your application.
-As opposed to Gradle's run task which doesn't attach a proper console and simply kills your app immediately on `SIGINT`.
 
 ## Use it!
 
@@ -22,24 +21,17 @@ As opposed to Gradle's run task which doesn't attach a proper console and simply
 
 ## Get it!
 
-It is highly recommended that you build it yourself on your platform. *On my M1 Mac, the final binary is only 90KB.*
+It is highly recommended that you build it yourself on your platform.
 
-If you want a pre-compiled binary, check the [latest release](https://github.com/GlitchyByte/grun/releases) for your platform.
-These are built using GitHub Actions on GitHub Runners and produce larger binaries than if you build locally.
+If you want a pre-compiled binary for macOS, Windows, or Ubuntu, check the [latest release](https://github.com/GlitchyByte/grun/releases).
+These are built using GitHub Actions on GitHub Runners.
 
 ## Build it!
 
-Clone this repo.
-
-Then, on macOS or Linux:
+Clone this repo. Then:
 
     ./build MinSizeRel clean
 
-On Windows:
-
-    cmake -DCMAKE_BUILD_TYPE=MinSizeRel -B build.cmake -S .
-    cmake --build build.cmake --config MinSizeRel --parallel
-
 ### Receive your tasty binary!
 
-After building, `grun` executable is in the `bin` directory.
+After building, `grun` executable is in the `code/bin` directory.

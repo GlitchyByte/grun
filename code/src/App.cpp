@@ -1,4 +1,4 @@
-// Copyright 2023 GlitchyByte
+// Copyright 2023-2024 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
 #include <map>
@@ -9,10 +9,10 @@
 #include "GradleParams.h"
 #include "App.h"
 
-gb::console::color_t const textColor { gb::console::rgb(1, 1, 1) };
-gb::console::color_t const highlightColor { gb::console::rgb(5, 5, 5) };
-gb::console::color_t const cmdColor { gb::console::rgb(3, 5, 3) };
-gb::console::color_t const argColor { gb::console::rgb(0, 2, 0) };
+gb::terminal::color_t const textColor { gb::terminal::rgb(1, 1, 1) };
+gb::terminal::color_t const highlightColor { gb::terminal::rgb(5, 5, 5) };
+gb::terminal::color_t const cmdColor { gb::terminal::rgb(3, 5, 3) };
+gb::terminal::color_t const argColor { gb::terminal::rgb(0, 2, 0) };
 
 void printUsage() noexcept {
     std::string const text { gb::strings::unindent(R"===(
@@ -25,10 +25,10 @@ void printUsage() noexcept {
           ${args}            Arguments for the running project.
         )===") };
     std::string const usage { gb::ReplaceableVars()
-            .add("app", gb::console::colorText("grun", cmdColor))
-            .add("param1", gb::console::colorText("project_gradle_root", argColor))
-            .add("param2", gb::console::colorText("project", argColor))
-            .add("args", gb::console::colorText("args ...", argColor))
+            .add("app", gb::terminal::colorText("grun", cmdColor))
+            .add("param1", gb::terminal::colorText("project_gradle_root", argColor))
+            .add("param2", gb::terminal::colorText("project", argColor))
+            .add("args", gb::terminal::colorText("args ...", argColor))
             .replace(text) };
     std::cout << usage;
 }
@@ -48,7 +48,8 @@ std::map<std::string, std::string> buildAndRetrieveGradleProperties(GradleParams
     int exitCode;
     std::regex const re { "^([a-zA-Z]+): ([^ ].*)$" };
     std::smatch match;
-    gb::process::execute(command, gradleParams.getGradleRoot(), nullptr, &exitCode,
+    auto const gradleRoot = gradleParams.getGradleRoot();
+    gb::process::execute(command, &gradleRoot, nullptr, &exitCode,
             [&](std::string const& line) {
                 if (!std::regex_match(line, match, re) || (match.size() != 3)) {
                     return false;
@@ -66,9 +67,9 @@ std::map<std::string, std::string> buildAndRetrieveGradleProperties(GradleParams
 
 void printMessage(std::string_view const& msg, std::string_view const& param) noexcept {
     size_t const pos = msg.find('@');
-    std::cerr << gb::console::colorText(msg.substr(0, pos), textColor)
-            << gb::console::colorText(param, highlightColor)
-            << gb::console::colorText(msg.substr(pos +1), textColor)
+    std::cerr << gb::terminal::colorText(msg.substr(0, pos), textColor)
+            << gb::terminal::colorText(param, highlightColor)
+            << gb::terminal::colorText(msg.substr(pos +1), textColor)
             << std::endl;
 }
 
@@ -105,7 +106,7 @@ int extractBin(GradleParams const& gradleParams, std::filesystem::path* binPath)
     // Untar.
     std::filesystem::path workDir { distDir / tarName.substr(0, tarName.length() - 4) };
     std::filesystem::remove_all(workDir);
-    if (!gb::process::execute("tar -xf " + tarName, distDir)) {
+    if (!gb::process::execute("tar -xf " + tarName, &distDir)) {
         printMessage("Can't untar: @", tarPath.string());
         return 3;
     }
@@ -126,8 +127,8 @@ int App::run(std::vector<std::string_view> const& args) noexcept {
     }
     std::string const command { binPath.string() + ' ' + gb::strings::fromVector(gradleParams.getProjectArgs(), " ") };
     result = std::system(command.c_str());
-    std::cout << gb::console::colorText("Exit code: ", textColor)
-            << gb::console::colorText(std::to_string(result), highlightColor)
+    std::cout << gb::terminal::colorText("Exit code: ", textColor)
+            << gb::terminal::colorText(std::to_string(result), highlightColor)
             << std::endl;
     return 0;
 }
